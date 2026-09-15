@@ -30,7 +30,7 @@ async function protegerAdmin(request: NextRequest): Promise<NextResponse> {
   return NextResponse.next();
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Rotas de admin (páginas + API) ficam só em Português, sem prefixo de
