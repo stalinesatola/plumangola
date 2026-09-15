@@ -1,21 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Produto } from "@/lib/produtos";
 import { ProductCard } from "@/components/dlamini-loja/ProductCard";
 import { OrderForm } from "@/components/dlamini-loja/OrderForm";
 
 export function CatalogoCliente({ produtos }: { produtos: Produto[] }) {
+  const t = useTranslations("DlaminiLoja");
   const [produtoSelecionado, setProdutoSelecionado] = useState<Produto | null>(
     null
   );
 
   if (produtos.length === 0) {
-    return (
-      <p className="text-gray-500">
-        Ainda não há produtos disponíveis. Volta a visitar em breve.
-      </p>
-    );
+    return <p className="text-gray-500">{t("empty")}</p>;
   }
 
   return (

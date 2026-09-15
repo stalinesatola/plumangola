@@ -1,0 +1,45 @@
+{
+  "Hub": {
+    "eyebrow": "Plum Angola",
+    "title": "One domain, many spaces.",
+    "description": "plum-angola.com brings together independent spaces — reseller shops, services and projects — each with its own address under this domain.",
+    "dlaminiLoja": {
+      "name": "Dlamini Shop",
+      "description": "Reseller Dlamini's space, featuring products from arthur-ford.com with orders sent directly via Telegram."
+    }
+  },
+  "DlaminiLoja": {
+    "brand": "Plum Angola",
+    "storeName": "Dlamini Shop",
+    "backToHub": "← plum-angola.com",
+    "heading": "Available products",
+    "intro": "Pick a product and place your order — Dlamini gets notified straight away on Telegram and will reach out to confirm your order.",
+    "empty": "No products available yet. Check back soon."
+  },
+  "ProductCard": {
+    "available": "Available to order",
+    "outOfStock": "Out of stock",
+    "orderButton": "Order now"
+  },
+  "OrderForm": {
+    "title": "Place your order",
+    "quantity": "Quantity",
+    "name": "Name",
+    "contact": "Phone / WhatsApp",
+    "location": "Location (optional)",
+    "notes": "Notes (optional)",
+    "submit": "Send order",
+    "submitting": "Sending...",
+    "genericError": "Could not send your order.",
+    "networkError": "Network error. Please try again."
+  },
+  "Obrigado": {
+    "title": "Order sent successfully!",
+    "message": "Dlamini received your order on Telegram and will reach out shortly to confirm the details.",
+    "backButton": "Back to shop"
+  },
+  "LanguageSwitcher": {
+    "pt": "PT",
+    "en": "EN"
+  }
+}

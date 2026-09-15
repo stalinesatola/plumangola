@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { Produto, formatarPreco, getProdutoStatus } from "@/lib/produtos";
 
 export function ProductCard({
@@ -7,6 +10,7 @@ export function ProductCard({
   produto: Produto;
   onSelecionar: (produto: Produto) => void;
 }) {
+  const t = useTranslations("ProductCard");
   const status = getProdutoStatus(produto);
   const disponivel = status === "disponivel";
 
@@ -31,7 +35,7 @@ export function ProductCard({
             disponivel ? "text-green-700" : "text-red-600"
           }`}
         >
-          {disponivel ? "Disponível para encomenda" : "Esgotado"}
+          {disponivel ? t("available") : t("outOfStock")}
         </span>
         <button
           type="button"
@@ -39,7 +43,7 @@ export function ProductCard({
           onClick={() => onSelecionar(produto)}
           className="mt-2 rounded-lg bg-plum-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-plum-700 disabled:cursor-not-allowed disabled:bg-gray-300"
         >
-          {disponivel ? "Fazer pedido" : "Esgotado"}
+          {disponivel ? t("orderButton") : t("outOfStock")}
         </button>
       </div>
     </div>

@@ -1,9 +1,12 @@
+import createIntlMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE, verifySessionToken } from "@/lib/session";
+import { routing } from "@/i18n/routing";
 
 const CAMINHOS_PUBLICOS = new Set(["/admin/login", "/api/admin/login"]);
+const intlMiddleware = createIntlMiddleware(routing);
 
-export async function middleware(request: NextRequest) {
+async function protegerAdmin(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
 
   if (CAMINHOS_PUBLICOS.has(pathname)) {
@@ -27,6 +30,25 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Rotas de admin (páginas + API) ficam só em Português, sem prefixo de
+  // idioma, protegidas por sessão — não passam pelo roteamento de idiomas.
+  if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
+    return protegerAdmin(request);
+  }
+
+  // Outras rotas de API (ex: pedidos do Telegram) também ficam de fora do
+  // roteamento de idiomas — não fazem sentido com prefixo /en, /pt.
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+
+  // Hub e /dlamini-loja: roteamento de idioma (PT sem prefixo, EN em /en).
+  return intlMiddleware(request);
+}
+
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/((?!_next|.*\\..*).*)"],
 };

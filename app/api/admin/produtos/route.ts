@@ -32,6 +32,8 @@ export async function POST(request: NextRequest) {
   const produto = await criarProduto({
     nome: payload.nome!,
     descricao: payload.descricao ?? "",
+    nomeEn: payload.nomeEn ?? null,
+    descricaoEn: payload.descricaoEn ?? null,
     imagem: payload.imagem ?? "/dlamini-loja/placeholder.svg",
     categoria: payload.categoria ?? "Geral",
     precoCompra: payload.precoCompra ?? null,

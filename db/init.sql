@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS produtos (
   slug           TEXT NOT NULL UNIQUE,
   nome           TEXT NOT NULL,
   descricao      TEXT NOT NULL DEFAULT '',
+  nome_en        TEXT,
+  descricao_en   TEXT,
   imagem         TEXT NOT NULL DEFAULT '',
   categoria      TEXT NOT NULL DEFAULT 'Geral',
 
