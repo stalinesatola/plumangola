@@ -8,7 +8,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const token = cookies().get(SESSION_COOKIE)?.value;
+  const token = (await cookies()).get(SESSION_COOKIE)?.value;
   const sessao = token ? await verifySessionToken(token) : null;
 
   if (!sessao) {

@@ -9,9 +9,10 @@ import { validarPayloadProduto } from "@/lib/validar-produto";
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = Number(params.id);
+  const { id: idParam } = await params;
+  const id = Number(idParam);
   if (Number.isNaN(id)) {
     return NextResponse.json({ ok: false, erro: "ID inválido." }, { status: 400 });
   }
@@ -75,9 +76,10 @@ export async function PATCH(
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = Number(params.id);
+  const { id: idParam } = await params;
+  const id = Number(idParam);
   if (Number.isNaN(id)) {
     return NextResponse.json({ ok: false, erro: "ID inválido." }, { status: 400 });
   }
