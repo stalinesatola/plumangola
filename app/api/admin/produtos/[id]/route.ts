@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { apagarProduto, atualizarProduto, NovoProdutoInput } from "@/lib/produtos";
+import {
+  apagarProduto,
+  atualizarProduto,
+  getProdutoPorOrigemUrl,
+  NovoProdutoInput,
+} from "@/lib/produtos";
 
 function validarPayload(payload: Partial<NovoProdutoInput>): string | null {
   if (!payload.nome) return "Nome é obrigatório.";
@@ -34,6 +39,19 @@ export async function PATCH(
   const erro = validarPayload(payload);
   if (erro) {
     return NextResponse.json({ ok: false, erro }, { status: 400 });
+  }
+
+  if (payload.origemUrl) {
+    const produtoExistente = await getProdutoPorOrigemUrl(payload.origemUrl, id);
+    if (produtoExistente) {
+      return NextResponse.json(
+        {
+          ok: false,
+          erro: `Este link já foi importado como "${produtoExistente.nome}".`,
+        },
+        { status: 409 }
+      );
+    }
   }
 
   try {

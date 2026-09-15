@@ -146,6 +146,20 @@ export async function getProdutoAdminPorId(
   return rows[0] ? mapRow(rows[0]) : undefined;
 }
 
+export async function getProdutoPorOrigemUrl(
+  origemUrl: string,
+  idParaIgnorar?: number
+): Promise<Produto | undefined> {
+  const { rows } = idParaIgnorar
+    ? await sql<ProdutoRow>`
+        SELECT * FROM produtos WHERE origem_url = ${origemUrl} AND id != ${idParaIgnorar}
+      `
+    : await sql<ProdutoRow>`
+        SELECT * FROM produtos WHERE origem_url = ${origemUrl}
+      `;
+  return rows[0] ? mapRow(rows[0]) : undefined;
+}
+
 async function gerarSlugUnico(nome: string, idParaIgnorar?: number): Promise<string> {
   const base = slugify(nome);
   let candidato = base;

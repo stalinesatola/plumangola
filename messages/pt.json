@@ -14,7 +14,9 @@
     "backToHub": "← plum-angola.com",
     "heading": "Produtos disponíveis",
     "intro": "Escolhe um produto e faz o teu pedido — o Dlamini recebe a notificação diretamente no Telegram e entra em contacto contigo para confirmar a encomenda.",
-    "empty": "Ainda não há produtos disponíveis. Volta a visitar em breve."
+    "empty": "Ainda não há produtos disponíveis. Volta a visitar em breve.",
+    "searchPlaceholder": "Pesquisar produtos...",
+    "noResults": "Nenhum produto encontrado para essa pesquisa."
   },
   "ProductCard": {
     "available": "Disponível para encomenda",

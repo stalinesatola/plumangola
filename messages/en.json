@@ -14,7 +14,9 @@
     "backToHub": "← plum-angola.com",
     "heading": "Available products",
     "intro": "Pick a product and place your order — Dlamini gets notified straight away on Telegram and will reach out to confirm your order.",
-    "empty": "No products available yet. Check back soon."
+    "empty": "No products available yet. Check back soon.",
+    "searchPlaceholder": "Search products...",
+    "noResults": "No products found for that search."
   },
   "ProductCard": {
     "available": "Available to order",
