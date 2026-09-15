@@ -38,6 +38,34 @@ function extrairPrecoEMoeda(texto: string): { preco: number | null; moeda: strin
   return { preco: preco && !Number.isNaN(preco) ? preco : null, moeda: moeda ?? "USD" };
 }
 
+const DOMINIOS_PERMITIDOS = new Set(["arthur-ford.com", "www.arthur-ford.com"]);
+
+/**
+ * Valida que a URL é um link http(s) para o domínio arthur-ford.com antes de
+ * lhe fazer fetch. Sem isto, esta função aceitaria qualquer URL (incluindo
+ * endereços internos como http://169.254.169.254/... ou serviços na rede
+ * privada da Vercel), permitindo um ataque de SSRF a partir do painel de
+ * admin.
+ */
+function validarUrlPermitida(url: string): URL {
+  let alvo: URL;
+  try {
+    alvo = new URL(url);
+  } catch {
+    throw new Error("URL inválido.");
+  }
+
+  if (alvo.protocol !== "https:" && alvo.protocol !== "http:") {
+    throw new Error("URL tem de começar por http:// ou https://.");
+  }
+
+  if (!DOMINIOS_PERMITIDOS.has(alvo.hostname.toLowerCase())) {
+    throw new Error("Só é permitido importar links de arthur-ford.com.");
+  }
+
+  return alvo;
+}
+
 /**
  * Faz scraping de uma página de produto individual em arthur-ford.com.
  *
@@ -47,8 +75,11 @@ function extrairPrecoEMoeda(texto: string): { preco: number | null; moeda: strin
  * ajusta-os depois de inspecionar o HTML real de uma página de produto.
  */
 export async function scrapeProdutoArthurFord(url: string): Promise<ProdutoImportado> {
-  const resposta = await fetch(url, {
+  const alvo = validarUrlPermitida(url);
+
+  const resposta = await fetch(alvo, {
     headers: { "User-Agent": "Mozilla/5.0 (compatible; PlumAngolaBot/1.0)" },
+    redirect: "error",
   });
 
   if (!resposta.ok) {
