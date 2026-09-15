@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buscarAdminPorUsername } from "@/lib/admins";
 import { SESSION_COOKIE, createSessionToken, verifyPassword } from "@/lib/auth";
+import { getClienteIp, verificarLimite } from "@/lib/rate-limit";
+
+const LIMITE_TENTATIVAS = 10;
+const JANELA_SEGUNDOS = 15 * 60;
 
 // Hash bcrypt fictício, usado só para gastar o mesmo tempo de CPU quando o
 // utilizador não existe — sem isto, a resposta seria mais rápida para
@@ -8,6 +12,23 @@ import { SESSION_COOKIE, createSessionToken, verifyPassword } from "@/lib/auth";
 const HASH_FICTICIO = "$2a$10$1Fn2EJRKPmVVI8Pn8lI8y.5p4qAHLeWCmDG.xp9d3tKXa7TtYMpXC";
 
 export async function POST(request: NextRequest) {
+  const ip = getClienteIp(request);
+  const permitido = await verificarLimite(
+    `login:${ip}`,
+    LIMITE_TENTATIVAS,
+    JANELA_SEGUNDOS
+  );
+
+  if (!permitido) {
+    return NextResponse.json(
+      {
+        ok: false,
+        erro: "Demasiadas tentativas de login. Tenta novamente daqui a uns minutos.",
+      },
+      { status: 429 }
+    );
+  }
+
   let payload: { username?: string; password?: string };
 
   try {

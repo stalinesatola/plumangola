@@ -37,3 +37,12 @@ CREATE TABLE IF NOT EXISTS produtos (
 
 CREATE INDEX IF NOT EXISTS idx_produtos_slug ON produtos (slug);
 CREATE INDEX IF NOT EXISTS idx_produtos_ativo ON produtos (ativo);
+
+-- Rate limiting (login do admin, pedidos da loja) — ver lib/rate-limit.ts
+CREATE TABLE IF NOT EXISTS rate_limit_events (
+  id         SERIAL PRIMARY KEY,
+  chave      TEXT NOT NULL,
+  criado_em  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_rate_limit_chave_criado ON rate_limit_events (chave, criado_em);

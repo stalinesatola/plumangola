@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { enviarMensagemTelegram } from "@/lib/telegram";
 import { getProdutoPublicoPorSlug, formatarPreco } from "@/lib/produtos";
+import { getClienteIp, verificarLimite } from "@/lib/rate-limit";
+
+const LIMITE_PEDIDOS = 5;
+const JANELA_SEGUNDOS = 10 * 60;
 
 type PedidoPayload = {
   produtoSlug?: string;
@@ -19,6 +23,23 @@ function escaparHtml(texto: string): string {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClienteIp(request);
+  const permitido = await verificarLimite(
+    `order:${ip}`,
+    LIMITE_PEDIDOS,
+    JANELA_SEGUNDOS
+  );
+
+  if (!permitido) {
+    return NextResponse.json(
+      {
+        ok: false,
+        erro: "Demasiados pedidos seguidos. Aguarda uns minutos e tenta novamente.",
+      },
+      { status: 429 }
+    );
+  }
+
   let payload: PedidoPayload;
 
   try {

@@ -87,9 +87,10 @@ Postgres (já não é o ficheiro JSON estático). Passos para configurar:
    psql "$POSTGRES_URL" -f db/init.sql
    ```
 5. Se já tinhas a base de dados criada **antes** dos campos de nome/descrição
-   em inglês existirem, corre também a migração
-   `db/migrations/001_add_i18n_produtos.sql` (mesma forma que o passo
-   anterior) — instalações novas já ficam com estas colunas no `init.sql`.
+   em inglês ou da tabela de rate limiting existirem, corre também as
+   migrações `db/migrations/001_add_i18n_produtos.sql` e
+   `db/migrations/002_add_rate_limit_events.sql` (mesma forma que o passo
+   anterior) — instalações novas já ficam com isto no `init.sql`.
 6. Define `AUTH_SECRET` (um valor aleatório, ex: `openssl rand -base64 32`)
    em `.env.local` e nas *Environment Variables* do projeto na Vercel.
 
