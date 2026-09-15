@@ -15,19 +15,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, erro: "URL é obrigatório." }, { status: 400 });
   }
 
-  const produtoExistente = await getProdutoPorOrigemUrl(payload.url);
-  if (produtoExistente) {
-    return NextResponse.json(
-      {
-        ok: false,
-        erro: `Este link já foi importado como "${produtoExistente.nome}". Edita esse produto em vez de importar de novo.`,
-        produtoExistenteId: produtoExistente.id,
-      },
-      { status: 409 }
-    );
-  }
-
   try {
+    const produtoExistente = await getProdutoPorOrigemUrl(payload.url);
+    if (produtoExistente) {
+      return NextResponse.json(
+        {
+          ok: false,
+          erro: `Este link já foi importado como "${produtoExistente.nome}". Edita esse produto em vez de importar de novo.`,
+          produtoExistenteId: produtoExistente.id,
+        },
+        { status: 409 }
+      );
+    }
+
     const dados = await scrapeProdutoArthurFord(payload.url);
     return NextResponse.json({ ok: true, dados });
   } catch (erro) {

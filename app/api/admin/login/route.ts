@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { buscarAdminPorUsername } from "@/lib/admins";
 import { SESSION_COOKIE, createSessionToken, verifyPassword } from "@/lib/auth";
 
+// Hash bcrypt fictício, usado só para gastar o mesmo tempo de CPU quando o
+// utilizador não existe — sem isto, a resposta seria mais rápida para
+// usernames inexistentes, permitindo descobri-los por temporização.
+const HASH_FICTICIO = "$2a$10$1Fn2EJRKPmVVI8Pn8lI8y.5p4qAHLeWCmDG.xp9d3tKXa7TtYMpXC";
+
 export async function POST(request: NextRequest) {
   let payload: { username?: string; password?: string };
 
@@ -24,7 +29,10 @@ export async function POST(request: NextRequest) {
   }
 
   const admin = await buscarAdminPorUsername(username);
-  const senhaValida = admin ? await verifyPassword(password, admin.passwordHash) : false;
+  const senhaValida = await verifyPassword(
+    password,
+    admin?.passwordHash ?? HASH_FICTICIO
+  );
 
   if (!admin || !senhaValida) {
     return NextResponse.json(

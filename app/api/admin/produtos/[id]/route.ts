@@ -5,20 +5,7 @@ import {
   getProdutoPorOrigemUrl,
   NovoProdutoInput,
 } from "@/lib/produtos";
-
-function validarPayload(payload: Partial<NovoProdutoInput>): string | null {
-  if (!payload.nome) return "Nome é obrigatório.";
-  if (payload.precoVenda === undefined || payload.precoVenda === null || payload.precoVenda <= 0) {
-    return "Preço de venda tem de ser maior que zero.";
-  }
-  if (payload.stock === undefined || payload.stock < 0) {
-    return "Stock inválido.";
-  }
-  if (payload.stockMinimo === undefined || payload.stockMinimo < 0) {
-    return "Stock mínimo inválido.";
-  }
-  return null;
-}
+import { validarPayloadProduto } from "@/lib/validar-produto";
 
 export async function PATCH(
   request: NextRequest,
@@ -36,25 +23,25 @@ export async function PATCH(
     return NextResponse.json({ ok: false, erro: "Pedido inválido." }, { status: 400 });
   }
 
-  const erro = validarPayload(payload);
+  const erro = validarPayloadProduto(payload);
   if (erro) {
     return NextResponse.json({ ok: false, erro }, { status: 400 });
   }
 
-  if (payload.origemUrl) {
-    const produtoExistente = await getProdutoPorOrigemUrl(payload.origemUrl, id);
-    if (produtoExistente) {
-      return NextResponse.json(
-        {
-          ok: false,
-          erro: `Este link já foi importado como "${produtoExistente.nome}".`,
-        },
-        { status: 409 }
-      );
-    }
-  }
-
   try {
+    if (payload.origemUrl) {
+      const produtoExistente = await getProdutoPorOrigemUrl(payload.origemUrl, id);
+      if (produtoExistente) {
+        return NextResponse.json(
+          {
+            ok: false,
+            erro: `Este link já foi importado como "${produtoExistente.nome}".`,
+          },
+          { status: 409 }
+        );
+      }
+    }
+
     const produto = await atualizarProduto(id, {
       nome: payload.nome!,
       descricao: payload.descricao ?? "",
@@ -71,10 +58,17 @@ export async function PATCH(
       origemUrl: payload.origemUrl ?? null,
     });
     return NextResponse.json({ ok: true, produto });
-  } catch {
+  } catch (erro) {
+    if (erro instanceof Error && erro.message.includes("não encontrado")) {
+      return NextResponse.json(
+        { ok: false, erro: "Produto não encontrado." },
+        { status: 404 }
+      );
+    }
+    console.error(`Falha ao atualizar produto ${id}:`, erro);
     return NextResponse.json(
-      { ok: false, erro: "Produto não encontrado." },
-      { status: 404 }
+      { ok: false, erro: "Não foi possível guardar o produto. Tenta novamente." },
+      { status: 500 }
     );
   }
 }
@@ -88,6 +82,14 @@ export async function DELETE(
     return NextResponse.json({ ok: false, erro: "ID inválido." }, { status: 400 });
   }
 
-  await apagarProduto(id);
-  return NextResponse.json({ ok: true });
+  try {
+    await apagarProduto(id);
+    return NextResponse.json({ ok: true });
+  } catch (erro) {
+    console.error(`Falha ao apagar produto ${id}:`, erro);
+    return NextResponse.json(
+      { ok: false, erro: "Não foi possível apagar o produto. Tenta novamente." },
+      { status: 500 }
+    );
+  }
 }
