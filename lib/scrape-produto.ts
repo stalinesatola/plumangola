@@ -30,7 +30,9 @@ function extrairPrecoEMoeda(texto: string): { preco: number | null; moeda: strin
       break;
     }
   }
-  const codigoMatch = limpo.match(/\b(USD|EUR|AOA)\b/i);
+  if (/\bR\s?\d/.test(limpo)) moeda = "ZAR";
+
+  const codigoMatch = limpo.match(/\b(USD|EUR|AOA|ZAR)\b/i);
   if (codigoMatch) moeda = codigoMatch[0].toUpperCase();
 
   return { preco: preco && !Number.isNaN(preco) ? preco : null, moeda: moeda ?? "USD" };
