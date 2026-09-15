@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { scrapeProdutoArthurFord } from "@/lib/scrape-produto";
+import { getProdutoPorOrigemUrl } from "@/lib/produtos";
 
 export async function POST(request: NextRequest) {
   let payload: { url?: string };
@@ -12,6 +13,18 @@ export async function POST(request: NextRequest) {
 
   if (!payload.url) {
     return NextResponse.json({ ok: false, erro: "URL é obrigatório." }, { status: 400 });
+  }
+
+  const produtoExistente = await getProdutoPorOrigemUrl(payload.url);
+  if (produtoExistente) {
+    return NextResponse.json(
+      {
+        ok: false,
+        erro: `Este link já foi importado como "${produtoExistente.nome}". Edita esse produto em vez de importar de novo.`,
+        produtoExistenteId: produtoExistente.id,
+      },
+      { status: 409 }
+    );
   }
 
   try {

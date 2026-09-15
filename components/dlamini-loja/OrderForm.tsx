@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { Produto, formatarPreco } from "@/lib/produtos";
 
 type Estado = "idle" | "enviando" | "erro";
@@ -13,6 +14,7 @@ export function OrderForm({
   produto: Produto;
   onFechar: () => void;
 }) {
+  const t = useTranslations("OrderForm");
   const router = useRouter();
   const [estado, setEstado] = useState<Estado>("idle");
   const [erro, setErro] = useState<string | null>(null);
@@ -42,14 +44,14 @@ export function OrderForm({
 
       if (!resposta.ok || !dados.ok) {
         setEstado("erro");
-        setErro(dados.erro ?? "Não foi possível enviar o pedido.");
+        setErro(dados.erro ?? t("genericError"));
         return;
       }
 
       router.push("/dlamini-loja/obrigado");
     } catch {
       setEstado("erro");
-      setErro("Falha de rede. Tenta novamente.");
+      setErro(t("networkError"));
     }
   }
 
@@ -58,7 +60,7 @@ export function OrderForm({
       <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold">Fazer pedido</h2>
+            <h2 className="text-lg font-semibold">{t("title")}</h2>
             <p className="text-sm text-gray-600">
               {produto.nome} — {formatarPreco(produto.precoVenda, produto.moedaVenda)}
             </p>
@@ -75,7 +77,7 @@ export function OrderForm({
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <label className="flex flex-col gap-1 text-sm">
-            Quantidade
+            {t("quantity")}
             <input
               name="quantidade"
               type="number"
@@ -87,7 +89,7 @@ export function OrderForm({
           </label>
 
           <label className="flex flex-col gap-1 text-sm">
-            Nome
+            {t("name")}
             <input
               name="nomeCliente"
               type="text"
@@ -97,7 +99,7 @@ export function OrderForm({
           </label>
 
           <label className="flex flex-col gap-1 text-sm">
-            Telefone / WhatsApp
+            {t("contact")}
             <input
               name="contacto"
               type="tel"
@@ -107,7 +109,7 @@ export function OrderForm({
           </label>
 
           <label className="flex flex-col gap-1 text-sm">
-            Localização (opcional)
+            {t("location")}
             <input
               name="localizacao"
               type="text"
@@ -116,7 +118,7 @@ export function OrderForm({
           </label>
 
           <label className="flex flex-col gap-1 text-sm">
-            Observações (opcional)
+            {t("notes")}
             <textarea
               name="observacoes"
               rows={2}
@@ -131,7 +133,7 @@ export function OrderForm({
             disabled={estado === "enviando"}
             className="mt-2 rounded-lg bg-plum-600 px-4 py-2 font-semibold text-white transition hover:bg-plum-700 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
-            {estado === "enviando" ? "A enviar..." : "Enviar pedido"}
+            {estado === "enviando" ? t("submitting") : t("submit")}
           </button>
         </form>
       </div>

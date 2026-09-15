@@ -7,6 +7,7 @@ baixo do mesmo domínio. O primeiro espaço é `/dlamini-loja`.
 
 - Next.js 14 (App Router) + TypeScript
 - Tailwind CSS
+- Bilingue (Português/Inglês) via `next-intl` no hub e em `/dlamini-loja`
 - Deploy alvo: Vercel
 
 ## Desenvolvimento local
@@ -17,11 +18,29 @@ cp .env.example .env.local   # preencher TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, A
 npm run dev
 ```
 
-Abrir `http://localhost:3000` (hub), `http://localhost:3000/dlamini-loja`
-(loja do Dlamini) e `http://localhost:3000/admin/login` (painel de admin).
+Abrir `http://localhost:3000` (hub, em Português), `http://localhost:3000/en`
+(hub em Inglês), `http://localhost:3000/dlamini-loja` (loja em Português),
+`http://localhost:3000/en/dlamini-loja` (loja em Inglês) e
+`http://localhost:3000/admin/login` (painel de admin, só em Português).
 
 A loja e o painel de admin precisam da base de dados Postgres configurada
 (ver secção seguinte) — sem `POSTGRES_URL`, essas páginas dão erro 500.
+
+## Idiomas (Português / Inglês)
+
+O hub (`/`) e a loja (`/dlamini-loja`) estão disponíveis em Português (sem
+prefixo na URL, idioma predefinido) e em Inglês (prefixo `/en`, ex:
+`/en/dlamini-loja`). Há um seletor **PT | EN** no cabeçalho de ambas as
+páginas. O painel de admin (`/admin`) fica só em Português — é uso interno.
+
+O texto fixo da interface (títulos, botões, formulários) está em
+`messages/pt.json` e `messages/en.json`. Para adicionar/editar textos,
+atualiza os dois ficheiros com as mesmas chaves.
+
+Os **produtos** também podem ter nome/descrição em inglês: no painel de
+admin, ao criar/editar um produto, os campos "Nome (EN)" e "Descrição (EN)"
+são opcionais — se ficarem em branco, a loja em inglês mostra a versão em
+português desse produto.
 
 ## Espaço: Dlamini Loja (`/dlamini-loja`)
 
@@ -61,11 +80,17 @@ Postgres (já não é o ficheiro JSON estático). Passos para configurar:
    `vercel env pull .env.local` para trazer essas variáveis para a tua
    máquina.
 4. Corre o schema uma única vez: abre o separador **Query** da base de dados
-   no dashboard da Vercel e cola o conteúdo de `db/init.sql`, ou localmente:
+   no dashboard da Vercel/Neon e cola o conteúdo de `db/init.sql` — se o
+   editor não aceitar várias instruções de uma vez, corre cada `CREATE
+   TABLE`/`CREATE INDEX` separadamente. Localmente:
    ```bash
    psql "$POSTGRES_URL" -f db/init.sql
    ```
-5. Define `AUTH_SECRET` (um valor aleatório, ex: `openssl rand -base64 32`)
+5. Se já tinhas a base de dados criada **antes** dos campos de nome/descrição
+   em inglês existirem, corre também a migração
+   `db/migrations/001_add_i18n_produtos.sql` (mesma forma que o passo
+   anterior) — instalações novas já ficam com estas colunas no `init.sql`.
+6. Define `AUTH_SECRET` (um valor aleatório, ex: `openssl rand -base64 32`)
    em `.env.local` e nas *Environment Variables* do projeto na Vercel.
 
 ### Criar a primeira conta de admin
@@ -124,10 +149,12 @@ Dlamini depois de receber o pedido no Telegram.
 
 ## Adicionar um novo espaço
 
-Cada espaço vive na sua própria pasta dentro de `app/`, por exemplo
-`app/<novo-espaco>/`, com o seu próprio `layout.tsx` e `page.tsx`. Adiciona
-uma entrada na lista `espacos` em `app/page.tsx` para que apareça na home de
-`plum-angola.com`.
+Cada espaço vive na sua própria pasta dentro de `app/[locale]/`, por exemplo
+`app/[locale]/<novo-espaco>/`, com o seu próprio `layout.tsx` e `page.tsx`.
+Adiciona uma entrada na lista `espacos` em `app/[locale]/page.tsx` para que
+apareça na home de `plum-angola.com`. Se o espaço tiver texto fixo na
+interface, adiciona as chaves de tradução correspondentes em
+`messages/pt.json` e `messages/en.json`.
 
 ## Deploy
 

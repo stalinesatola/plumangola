@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { apagarProduto, atualizarProduto, NovoProdutoInput } from "@/lib/produtos";
+import {
+  apagarProduto,
+  atualizarProduto,
+  getProdutoPorOrigemUrl,
+  NovoProdutoInput,
+} from "@/lib/produtos";
 
 function validarPayload(payload: Partial<NovoProdutoInput>): string | null {
   if (!payload.nome) return "Nome é obrigatório.";
@@ -36,10 +41,25 @@ export async function PATCH(
     return NextResponse.json({ ok: false, erro }, { status: 400 });
   }
 
+  if (payload.origemUrl) {
+    const produtoExistente = await getProdutoPorOrigemUrl(payload.origemUrl, id);
+    if (produtoExistente) {
+      return NextResponse.json(
+        {
+          ok: false,
+          erro: `Este link já foi importado como "${produtoExistente.nome}".`,
+        },
+        { status: 409 }
+      );
+    }
+  }
+
   try {
     const produto = await atualizarProduto(id, {
       nome: payload.nome!,
       descricao: payload.descricao ?? "",
+      nomeEn: payload.nomeEn ?? null,
+      descricaoEn: payload.descricaoEn ?? null,
       imagem: payload.imagem ?? "/dlamini-loja/placeholder.svg",
       categoria: payload.categoria ?? "Geral",
       precoCompra: payload.precoCompra ?? null,

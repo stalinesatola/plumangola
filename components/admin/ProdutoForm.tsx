@@ -7,6 +7,8 @@ import { Produto } from "@/lib/produtos";
 type Valores = {
   nome: string;
   descricao: string;
+  nomeEn: string;
+  descricaoEn: string;
   imagem: string;
   categoria: string;
   precoCompra: string;
@@ -21,6 +23,8 @@ type Valores = {
 const VALORES_VAZIOS: Valores = {
   nome: "",
   descricao: "",
+  nomeEn: "",
+  descricaoEn: "",
   imagem: "",
   categoria: "Geral",
   precoCompra: "",
@@ -36,6 +40,8 @@ function produtoParaValores(produto: Produto): Valores {
   return {
     nome: produto.nome,
     descricao: produto.descricao,
+    nomeEn: produto.nomeEn ?? "",
+    descricaoEn: produto.descricaoEn ?? "",
     imagem: produto.imagem,
     categoria: produto.categoria,
     precoCompra: produto.precoCompra !== null ? String(produto.precoCompra) : "",
@@ -109,6 +115,8 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
     const payload = {
       nome: valores.nome,
       descricao: valores.descricao,
+      nomeEn: valores.nomeEn || null,
+      descricaoEn: valores.descricaoEn || null,
       imagem: valores.imagem || "/dlamini-loja/placeholder.svg",
       categoria: valores.categoria || "Geral",
       precoCompra: valores.precoCompra ? Number(valores.precoCompra) : null,
@@ -199,6 +207,30 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
             className="rounded-lg border border-gray-300 px-3 py-2"
           />
         </label>
+
+        <label className="flex flex-col gap-1 text-sm">
+          Nome (EN) <span className="text-gray-400">— opcional</span>
+          <input
+            value={valores.nomeEn}
+            onChange={(event) => atualizarCampo("nomeEn", event.target.value)}
+            className="rounded-lg border border-gray-300 px-3 py-2"
+          />
+        </label>
+
+        <label className="flex flex-col gap-1 text-sm">
+          Descrição (EN) <span className="text-gray-400">— opcional</span>
+          <textarea
+            rows={3}
+            value={valores.descricaoEn}
+            onChange={(event) => atualizarCampo("descricaoEn", event.target.value)}
+            className="rounded-lg border border-gray-300 px-3 py-2"
+          />
+        </label>
+
+        <p className="-mt-2 text-xs text-gray-500">
+          Se deixares o nome/descrição em inglês em branco, a loja mostra a
+          versão em português também na versão EN do site.
+        </p>
 
         <label className="flex flex-col gap-1 text-sm">
           Imagem (URL)

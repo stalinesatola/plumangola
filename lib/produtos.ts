@@ -6,6 +6,8 @@ export type Produto = {
   slug: string;
   nome: string;
   descricao: string;
+  nomeEn: string | null;
+  descricaoEn: string | null;
   imagem: string;
   categoria: string;
   precoCompra: number | null;
@@ -23,6 +25,8 @@ export type Produto = {
 export type NovoProdutoInput = {
   nome: string;
   descricao: string;
+  nomeEn?: string | null;
+  descricaoEn?: string | null;
   imagem: string;
   categoria: string;
   precoCompra: number | null;
@@ -40,6 +44,8 @@ type ProdutoRow = {
   slug: string;
   nome: string;
   descricao: string;
+  nome_en: string | null;
+  descricao_en: string | null;
   imagem: string;
   categoria: string;
   preco_compra: string | null;
@@ -60,6 +66,8 @@ function mapRow(row: ProdutoRow): Produto {
     slug: row.slug,
     nome: row.nome,
     descricao: row.descricao,
+    nomeEn: row.nome_en,
+    descricaoEn: row.descricao_en,
     imagem: row.imagem,
     categoria: row.categoria,
     precoCompra: row.preco_compra !== null ? Number(row.preco_compra) : null,
@@ -73,6 +81,22 @@ function mapRow(row: ProdutoRow): Produto {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
+}
+
+/**
+ * Devolve uma cópia do produto com nome/descrição substituídos pela versão
+ * em inglês quando disponível e o locale pedido for "en". Usado apenas para
+ * apresentação na loja pública — nunca altera os dados guardados na BD.
+ */
+export function localizarProduto(produto: Produto, locale: string): Produto {
+  if (locale === "en" && produto.nomeEn) {
+    return {
+      ...produto,
+      nome: produto.nomeEn,
+      descricao: produto.descricaoEn || produto.descricao,
+    };
+  }
+  return produto;
 }
 
 export function getProdutoStatus(
@@ -122,6 +146,20 @@ export async function getProdutoAdminPorId(
   return rows[0] ? mapRow(rows[0]) : undefined;
 }
 
+export async function getProdutoPorOrigemUrl(
+  origemUrl: string,
+  idParaIgnorar?: number
+): Promise<Produto | undefined> {
+  const { rows } = idParaIgnorar
+    ? await sql<ProdutoRow>`
+        SELECT * FROM produtos WHERE origem_url = ${origemUrl} AND id != ${idParaIgnorar}
+      `
+    : await sql<ProdutoRow>`
+        SELECT * FROM produtos WHERE origem_url = ${origemUrl}
+      `;
+  return rows[0] ? mapRow(rows[0]) : undefined;
+}
+
 async function gerarSlugUnico(nome: string, idParaIgnorar?: number): Promise<string> {
   const base = slugify(nome);
   let candidato = base;
@@ -144,11 +182,11 @@ export async function criarProduto(input: NovoProdutoInput): Promise<Produto> {
 
   const { rows } = await sql<ProdutoRow>`
     INSERT INTO produtos (
-      slug, nome, descricao, imagem, categoria,
+      slug, nome, descricao, nome_en, descricao_en, imagem, categoria,
       preco_compra, moeda_compra, preco_venda, moeda_venda,
       stock, stock_minimo, ativo, origem_url
     ) VALUES (
-      ${slug}, ${input.nome}, ${input.descricao}, ${input.imagem}, ${input.categoria},
+      ${slug}, ${input.nome}, ${input.descricao}, ${input.nomeEn ?? null}, ${input.descricaoEn ?? null}, ${input.imagem}, ${input.categoria},
       ${input.precoCompra}, ${input.moedaCompra}, ${input.precoVenda}, ${moedaVenda},
       ${input.stock}, ${input.stockMinimo}, ${input.ativo}, ${input.origemUrl}
     )
@@ -169,6 +207,8 @@ export async function atualizarProduto(
       slug = ${slug},
       nome = ${input.nome},
       descricao = ${input.descricao},
+      nome_en = ${input.nomeEn ?? null},
+      descricao_en = ${input.descricaoEn ?? null},
       imagem = ${input.imagem},
       categoria = ${input.categoria},
       preco_compra = ${input.precoCompra},
