@@ -1,16 +1,10 @@
-"use client";
+import { listarProdutosPublicos } from "@/lib/produtos";
+import { CatalogoCliente } from "@/components/dlamini-loja/CatalogoCliente";
 
-import { useState } from "react";
-import { ProductCard } from "@/components/dlamini-loja/ProductCard";
-import { OrderForm } from "@/components/dlamini-loja/OrderForm";
-import { getDlaminiLojaProdutos, Produto } from "@/lib/products";
+export const revalidate = 0;
 
-const produtos = getDlaminiLojaProdutos();
-
-export default function DlaminiLojaPage() {
-  const [produtoSelecionado, setProdutoSelecionado] = useState<Produto | null>(
-    null
-  );
+export default async function DlaminiLojaPage() {
+  const produtos = await listarProdutosPublicos();
 
   return (
     <>
@@ -25,22 +19,7 @@ export default function DlaminiLojaPage() {
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {produtos.map((produto) => (
-          <ProductCard
-            key={produto.id}
-            produto={produto}
-            onSelecionar={setProdutoSelecionado}
-          />
-        ))}
-      </div>
-
-      {produtoSelecionado && (
-        <OrderForm
-          produto={produtoSelecionado}
-          onFechar={() => setProdutoSelecionado(null)}
-        />
-      )}
+      <CatalogoCliente produtos={produtos} />
     </>
   );
 }

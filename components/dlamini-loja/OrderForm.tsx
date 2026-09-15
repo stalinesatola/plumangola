@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Produto, formatarPreco } from "@/lib/products";
+import { Produto, formatarPreco } from "@/lib/produtos";
 
 type Estado = "idle" | "enviando" | "erro";
 
@@ -60,7 +60,7 @@ export function OrderForm({
           <div>
             <h2 className="text-lg font-semibold">Fazer pedido</h2>
             <p className="text-sm text-gray-600">
-              {produto.nome} — {formatarPreco(produto.preco, produto.moeda)}
+              {produto.nome} — {formatarPreco(produto.precoVenda, produto.moedaVenda)}
             </p>
           </div>
           <button

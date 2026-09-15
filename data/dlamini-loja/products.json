@@ -1,5 +1,5 @@
 {
-  "_readme": "Catalogo de exemplo (placeholder). Substituir pelos produtos reais de arthur-ford.com, manualmente ou correndo scripts/scrape-arthur-ford.ts fora do sandbox. Ver README.md.",
+  "_readme": "LEGADO: este ficheiro ja nao e lido por nenhum codigo em runtime. O catalogo passou a viver na base de dados Postgres, gerido pelo painel /admin/produtos. Mantido so como referencia historica/seed. Ver README.md.",
   "moedaPredefinida": "AOA",
   "produtos": [
     {
