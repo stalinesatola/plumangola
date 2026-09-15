@@ -1,0 +1,50 @@
+{
+  "_readme": "Catalogo de exemplo (placeholder). Substituir pelos produtos reais de arthur-ford.com, manualmente ou correndo scripts/scrape-arthur-ford.ts fora do sandbox. Ver README.md.",
+  "moedaPredefinida": "AOA",
+  "produtos": [
+    {
+      "id": "prod-001",
+      "slug": "produto-exemplo-1",
+      "nome": "Produto de exemplo 1",
+      "descricao": "Descrição de exemplo — substituir pelos dados reais de arthur-ford.com.",
+      "preco": 15000,
+      "moeda": "AOA",
+      "imagem": "/dlamini-loja/placeholder.svg",
+      "categoria": "Geral",
+      "disponivel": true
+    },
+    {
+      "id": "prod-002",
+      "slug": "produto-exemplo-2",
+      "nome": "Produto de exemplo 2",
+      "descricao": "Descrição de exemplo — substituir pelos dados reais de arthur-ford.com.",
+      "preco": 27500,
+      "moeda": "AOA",
+      "imagem": "/dlamini-loja/placeholder.svg",
+      "categoria": "Geral",
+      "disponivel": true
+    },
+    {
+      "id": "prod-003",
+      "slug": "produto-exemplo-3",
+      "nome": "Produto de exemplo 3",
+      "descricao": "Descrição de exemplo — substituir pelos dados reais de arthur-ford.com.",
+      "preco": 9800,
+      "moeda": "AOA",
+      "imagem": "/dlamini-loja/placeholder.svg",
+      "categoria": "Geral",
+      "disponivel": false
+    },
+    {
+      "id": "prod-004",
+      "slug": "produto-exemplo-4",
+      "nome": "Produto de exemplo 4",
+      "descricao": "Descrição de exemplo — substituir pelos dados reais de arthur-ford.com.",
+      "preco": 42000,
+      "moeda": "AOA",
+      "imagem": "/dlamini-loja/placeholder.svg",
+      "categoria": "Geral",
+      "disponivel": true
+    }
+  ]
+}
