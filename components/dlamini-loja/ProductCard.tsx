@@ -1,0 +1,37 @@
+import { Produto, formatarPreco } from "@/lib/products";
+
+export function ProductCard({
+  produto,
+  onSelecionar,
+}: {
+  produto: Produto;
+  onSelecionar: (produto: Produto) => void;
+}) {
+  return (
+    <div className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+      <div className="aspect-[4/3] w-full bg-plum-50">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={produto.imagem}
+          alt={produto.nome}
+          className="h-full w-full object-cover"
+        />
+      </div>
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <h3 className="font-semibold text-gray-900">{produto.nome}</h3>
+        <p className="flex-1 text-sm text-gray-600">{produto.descricao}</p>
+        <p className="text-lg font-bold text-plum-700">
+          {formatarPreco(produto.preco, produto.moeda)}
+        </p>
+        <button
+          type="button"
+          disabled={!produto.disponivel}
+          onClick={() => onSelecionar(produto)}
+          className="mt-2 rounded-lg bg-plum-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-plum-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+        >
+          {produto.disponivel ? "Fazer pedido" : "Indisponível"}
+        </button>
+      </div>
+    </div>
+  );
+}
