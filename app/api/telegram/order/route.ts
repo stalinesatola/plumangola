@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { enviarMensagemTelegram } from "@/lib/telegram";
-import { getDlaminiLojaProdutoPorSlug, formatarPreco } from "@/lib/products";
+import { getProdutoPublicoPorSlug, formatarPreco } from "@/lib/produtos";
 
 type PedidoPayload = {
   produtoSlug?: string;
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const produto = getDlaminiLojaProdutoPorSlug(produtoSlug);
+  const produto = await getProdutoPublicoPorSlug(produtoSlug);
   if (!produto) {
     return NextResponse.json(
       { ok: false, erro: "Produto não encontrado." },
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     "",
     `<b>Produto:</b> ${escaparHtml(produto.nome)}`,
     `<b>Quantidade:</b> ${quantidadeFinal}`,
-    `<b>Preço unitário:</b> ${formatarPreco(produto.preco, produto.moeda)}`,
+    `<b>Preço unitário:</b> ${formatarPreco(produto.precoVenda, produto.moedaVenda)}`,
     `<b>Cliente:</b> ${escaparHtml(nomeCliente)}`,
     `<b>Contacto:</b> ${escaparHtml(contacto)}`,
   ];

@@ -1,6 +1,14 @@
 /**
- * Script standalone para gerar data/dlamini-loja/products.json a partir dos
- * produtos publicados em arthur-ford.com.
+ * Script standalone LEGADO que gera data/dlamini-loja/products.json a partir
+ * dos produtos publicados em arthur-ford.com (scraping em massa da página
+ * inicial). Desde que o catálogo passou a viver na base de dados Postgres
+ * (ver lib/produtos.ts e o painel /admin), este ficheiro deixou de ser lido
+ * por qualquer código em runtime — serve só como referência histórica ou
+ * para gerar um seed inicial de produtos.
+ *
+ * Para importar produtos individuais a partir de um link específico, usa
+ * antes o painel de admin (/admin/produtos/novo -> "Importar por link"),
+ * que usa lib/scrape-produto.ts.
  *
  * IMPORTANTE: este script NÃO corre dentro do sandbox usado para desenvolver
  * este repositório (o acesso de rede a arthur-ford.com está bloqueado aí).
@@ -10,13 +18,13 @@
  *
  * A estrutura de arthur-ford.com (seletores HTML, paginação, proteção
  * anti-bot) não foi verificada — ajusta os seletores abaixo depois de
- * inspecionar o site real. Se o scraping automático não for viável,
- * preenche data/dlamini-loja/products.json manualmente com o mesmo formato.
+ * inspecionar o site real.
  */
 
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import * as cheerio from "cheerio";
+import { slugify } from "../lib/slug";
 
 const ORIGEM = "https://arthur-ford.com/";
 const DESTINO = path.join(
@@ -37,15 +45,6 @@ type ProdutoScrapado = {
   categoria: string;
   disponivel: boolean;
 };
-
-function slugify(texto: string): string {
-  return texto
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
 
 async function extrairProdutos(): Promise<ProdutoScrapado[]> {
   const resposta = await fetch(ORIGEM);

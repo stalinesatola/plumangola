@@ -13,12 +13,15 @@ baixo do mesmo domínio. O primeiro espaço é `/dlamini-loja`.
 
 ```bash
 npm install
-cp .env.example .env.local   # preencher TELEGRAM_BOT_TOKEN e TELEGRAM_CHAT_ID
+cp .env.example .env.local   # preencher TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, AUTH_SECRET, POSTGRES_URL
 npm run dev
 ```
 
-Abrir `http://localhost:3000` (hub) e `http://localhost:3000/dlamini-loja`
-(loja do Dlamini).
+Abrir `http://localhost:3000` (hub), `http://localhost:3000/dlamini-loja`
+(loja do Dlamini) e `http://localhost:3000/admin/login` (painel de admin).
+
+A loja e o painel de admin precisam da base de dados Postgres configurada
+(ver secção seguinte) — sem `POSTGRES_URL`, essas páginas dão erro 500.
 
 ## Espaço: Dlamini Loja (`/dlamini-loja`)
 
@@ -42,21 +45,70 @@ manualmente por ele.
    - Localmente, em `.env.local`.
    - Em produção, nas *Environment Variables* do projeto na Vercel.
 
-### Catálogo de produtos
+### Configurar a base de dados (Vercel Postgres)
 
-Os produtos ficam em `data/dlamini-loja/products.json`. O repositório
-arranca com produtos de **exemplo/placeholder** — substitui pelos dados reais
-de arthur-ford.com de uma destas formas:
+O catálogo de produtos e as contas de admin vivem numa base de dados
+Postgres (já não é o ficheiro JSON estático). Passos para configurar:
 
-- **Manual**: editar `data/dlamini-loja/products.json` diretamente, mantendo
-  o mesmo formato de cada produto (`id`, `slug`, `nome`, `descricao`,
-  `preco`, `moeda`, `imagem`, `categoria`, `disponivel`).
-- **Scraping**: correr `npm run scrape:dlamini-loja`
-  (`scripts/scrape-arthur-ford.ts`) **num ambiente com acesso à internet**
-  (este script não corre no sandbox de desenvolvimento usado para construir
-  este projeto, porque o acesso a arthur-ford.com está bloqueado aí). Os
-  seletores HTML no script são um ponto de partida e provavelmente precisam
-  de ajuste depois de inspecionar a estrutura real do site.
+1. No dashboard da Vercel, no projeto `plumangola` → separador **Storage** →
+   **Create Database** → escolhe Postgres (pode aparecer como integração
+   "Neon" — é compatível, a Vercel injeta na mesma as variáveis
+   `POSTGRES_URL` que este projeto usa).
+2. Liga a base de dados ao projeto (**Connect to Project**) — isto injeta
+   automaticamente `POSTGRES_URL` (e variantes) nas *Environment Variables*
+   do projeto.
+3. Localmente, corre `vercel link` (se ainda não tiveres feito) e depois
+   `vercel env pull .env.local` para trazer essas variáveis para a tua
+   máquina.
+4. Corre o schema uma única vez: abre o separador **Query** da base de dados
+   no dashboard da Vercel e cola o conteúdo de `db/init.sql`, ou localmente:
+   ```bash
+   psql "$POSTGRES_URL" -f db/init.sql
+   ```
+5. Define `AUTH_SECRET` (um valor aleatório, ex: `openssl rand -base64 32`)
+   em `.env.local` e nas *Environment Variables* do projeto na Vercel.
+
+### Criar a primeira conta de admin
+
+Não há registo público — as contas são criadas via script:
+
+```bash
+npm run seed:admin -- --username=dlamini --password=umaSenhaForte
+```
+
+Corre este comando sempre que precisares de criar mais uma conta de admin
+(reutiliza o mesmo script, só muda o `--username`).
+
+### Painel de administração (`/admin`)
+
+Em `/admin/login`, qualquer conta criada pelo `seed-admin.ts` pode entrar.
+No painel (`/admin/produtos`) dá para:
+
+- Ver todos os produtos, com aviso visual de stock baixo/esgotado.
+- Criar um produto manualmente, ou colando um link de uma página de produto
+  de arthur-ford.com (ex: `https://arthur-ford.com/products/elixir-emerald-004-50ml`)
+  em "Importar por link" — isto só **pré-preenche** o formulário (nome,
+  descrição, imagem, preço de compra); revê e ajusta antes de guardar.
+  **Nota**: esta importação só funciona em produção (Vercel), porque este
+  sandbox de desenvolvimento não tem acesso de rede a arthur-ford.com. Os
+  seletores em `lib/scrape-produto.ts` são um ponto de partida best-effort e
+  podem precisar de ajuste depois de inspecionar o HTML real do site.
+- Definir o preço de venda (em AOA, mostrado aos clientes), o stock atual e
+  o stock mínimo (só usado para o alerta interno no painel — os clientes
+  nunca veem este número).
+- Editar ou apagar produtos.
+
+Na loja pública, o stock só mostra 2 estados: **"Disponível para
+encomenda"** (`stock > 0`) ou **"Esgotado"** (`stock = 0`). Um pedido feito
+pelo cliente **não** reduz o stock automaticamente — o admin atualiza o
+stock manualmente no painel depois de confirmar a venda.
+
+### Catálogo antigo (`data/dlamini-loja/products.json`)
+
+Este ficheiro já não é lido por nenhum código em runtime — fica só como
+referência histórica. `scripts/scrape-arthur-ford.ts` (scraping em massa da
+página inicial de arthur-ford.com) também é legado pelo mesmo motivo; para
+importar produtos usa antes o painel de admin.
 
 ### Fluxo de encomenda
 
@@ -82,7 +134,11 @@ uma entrada na lista `espacos` em `app/page.tsx` para que apareça na home de
 Este projeto está preparado para deploy na Vercel:
 
 1. Importar o repositório `stalinesatola/plumangola` na Vercel.
-2. Configurar as variáveis de ambiente `TELEGRAM_BOT_TOKEN` e
-   `TELEGRAM_CHAT_ID` no projeto.
-3. Associar o domínio `plum-angola.com` ao projeto nas definições de
+2. Criar e ligar a base de dados Postgres (ver "Configurar a base de dados"
+   acima) e correr `db/init.sql`.
+3. Configurar as variáveis de ambiente `TELEGRAM_BOT_TOKEN`,
+   `TELEGRAM_CHAT_ID` e `AUTH_SECRET` no projeto.
+4. Correr `npm run seed:admin -- --username=... --password=...` para criar
+   a primeira conta de admin.
+5. Associar o domínio `plum-angola.com` ao projeto nas definições de
    *Domains* da Vercel.

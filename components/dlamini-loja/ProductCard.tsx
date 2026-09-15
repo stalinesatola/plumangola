@@ -1,4 +1,4 @@
-import { Produto, formatarPreco } from "@/lib/products";
+import { Produto, formatarPreco, getProdutoStatus } from "@/lib/produtos";
 
 export function ProductCard({
   produto,
@@ -7,6 +7,9 @@ export function ProductCard({
   produto: Produto;
   onSelecionar: (produto: Produto) => void;
 }) {
+  const status = getProdutoStatus(produto);
+  const disponivel = status === "disponivel";
+
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
       <div className="aspect-[4/3] w-full bg-plum-50">
@@ -21,15 +24,22 @@ export function ProductCard({
         <h3 className="font-semibold text-gray-900">{produto.nome}</h3>
         <p className="flex-1 text-sm text-gray-600">{produto.descricao}</p>
         <p className="text-lg font-bold text-plum-700">
-          {formatarPreco(produto.preco, produto.moeda)}
+          {formatarPreco(produto.precoVenda, produto.moedaVenda)}
         </p>
+        <span
+          className={`text-xs font-semibold ${
+            disponivel ? "text-green-700" : "text-red-600"
+          }`}
+        >
+          {disponivel ? "Disponível para encomenda" : "Esgotado"}
+        </span>
         <button
           type="button"
-          disabled={!produto.disponivel}
+          disabled={!disponivel}
           onClick={() => onSelecionar(produto)}
           className="mt-2 rounded-lg bg-plum-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-plum-700 disabled:cursor-not-allowed disabled:bg-gray-300"
         >
-          {produto.disponivel ? "Fazer pedido" : "Indisponível"}
+          {disponivel ? "Fazer pedido" : "Esgotado"}
         </button>
       </div>
     </div>
