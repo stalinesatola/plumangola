@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Produto, formatarPreco } from "@/lib/produtos";
@@ -18,6 +18,17 @@ export function OrderForm({
   const router = useRouter();
   const [estado, setEstado] = useState<Estado>("idle");
   const [erro, setErro] = useState<string | null>(null);
+  const primeiroCampoRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    primeiroCampoRef.current?.focus();
+
+    function handleTecla(event: KeyboardEvent) {
+      if (event.key === "Escape") onFechar();
+    }
+    window.addEventListener("keydown", handleTecla);
+    return () => window.removeEventListener("keydown", handleTecla);
+  }, [onFechar]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -56,11 +67,22 @@ export function OrderForm({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      onClick={onFechar}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="order-form-title"
+        className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+        onClick={(event) => event.stopPropagation()}
+      >
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold">{t("title")}</h2>
+            <h2 id="order-form-title" className="text-lg font-semibold">
+              {t("title")}
+            </h2>
             <p className="text-sm text-gray-600">
               {produto.nome} — {formatarPreco(produto.precoVenda, produto.moedaVenda)}
             </p>
@@ -79,6 +101,7 @@ export function OrderForm({
           <label className="flex flex-col gap-1 text-sm">
             {t("quantity")}
             <input
+              ref={primeiroCampoRef}
               name="quantidade"
               type="number"
               min={1}
@@ -126,7 +149,11 @@ export function OrderForm({
             />
           </label>
 
-          {erro && <p className="text-sm text-red-600">{erro}</p>}
+          {erro && (
+            <p role="alert" aria-live="polite" className="text-sm text-red-600">
+              {erro}
+            </p>
+          )}
 
           <button
             type="submit"

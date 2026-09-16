@@ -178,7 +178,9 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
             </button>
           </div>
           {erroImportar && (
-            <p className="mt-2 text-sm text-red-600">{erroImportar}</p>
+            <p role="alert" aria-live="polite" className="mt-2 text-sm text-red-600">
+              {erroImportar}
+            </p>
           )}
           <p className="mt-2 text-xs text-plum-600">
             Isto só pré-preenche o formulário abaixo — revê os dados antes de
@@ -333,7 +335,11 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
           Ativo (visível na loja)
         </label>
 
-        {erroGuardar && <p className="text-sm text-red-600">{erroGuardar}</p>}
+        {erroGuardar && (
+          <p role="alert" aria-live="polite" className="text-sm text-red-600">
+            {erroGuardar}
+          </p>
+        )}
 
         <div className="flex gap-3">
           <button
