@@ -63,7 +63,11 @@ export function ProdutosTable({ produtos }: { produtos: Produto[] }) {
       />
 
       {erro && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p
+          role="alert"
+          aria-live="polite"
+          className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"
+        >
           {erro}
         </p>
       )}
