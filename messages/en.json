@@ -43,5 +43,10 @@
   "LanguageSwitcher": {
     "pt": "PT",
     "en": "EN"
+  },
+  "ErroPagina": {
+    "title": "Something went wrong",
+    "message": "We couldn't load this page. Please try again shortly.",
+    "retry": "Try again"
   }
 }
