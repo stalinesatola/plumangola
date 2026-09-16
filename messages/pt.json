@@ -43,5 +43,10 @@
   "LanguageSwitcher": {
     "pt": "PT",
     "en": "EN"
+  },
+  "ErroPagina": {
+    "title": "Algo correu mal",
+    "message": "Não foi possível carregar esta página. Tenta novamente daqui a pouco.",
+    "retry": "Tentar novamente"
   }
 }
