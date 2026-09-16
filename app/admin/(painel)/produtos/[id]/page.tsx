@@ -5,9 +5,10 @@ import { ProdutoForm } from "@/components/admin/ProdutoForm";
 export default async function EditarProdutoPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const id = Number(params.id);
+  const { id: idParam } = await params;
+  const id = Number(idParam);
   if (Number.isNaN(id)) notFound();
 
   const produto = await getProdutoAdminPorId(id);

@@ -7,12 +7,13 @@ export const revalidate = 0;
 export default async function DlaminiLojaPage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const t = await getTranslations("DlaminiLoja");
   const produtos = await listarProdutosPublicos();
   const produtosLocalizados = produtos.map((produto) =>
-    localizarProduto(produto, params.locale)
+    localizarProduto(produto, locale)
   );
 
   return (
