@@ -148,6 +148,43 @@ importar produtos usa antes o painel de admin.
 Não há pagamento online — a venda é confirmada e fechada manualmente pelo
 Dlamini depois de receber o pedido no Telegram.
 
+## Espaço: Paulira Beauty (`/paulirabeauty`)
+
+Salão de estética & bem-estar. Não tem catálogo de produtos — o cliente vê a
+informação do salão (horário, morada, WhatsApp) e submete um **pedido de
+agendamento**, que é enviado diretamente para o Telegram da Paulira através
+de um bot próprio (separado do bot do Dlamini, para não misturar
+notificações de negócios diferentes).
+
+### Configurar o bot do Telegram da Paulira
+
+Mesmos passos do bot do Dlamini (ver secção acima), mas cria um **bot
+novo** e usa o `chat_id` da Paulira:
+
+1. Cria um bot novo com **@BotFather** — o token é o
+   `TELEGRAM_BOT_TOKEN_PAULIRA`.
+2. Obtém o `chat_id` da Paulira do mesmo modo (`getUpdates`) — é o
+   `TELEGRAM_CHAT_ID_PAULIRA`.
+3. Define as duas variáveis em `.env.local` e nas *Environment Variables*
+   do projeto na Vercel.
+
+### Fluxo de agendamento
+
+1. Cliente preenche o formulário em `/paulirabeauty` (nome, contacto,
+   serviço pretendido, data/hora preferidas opcionais, local — salão ou ao
+   domicílio — e observações).
+2. O formulário chama `POST /api/telegram/appointment`.
+3. A API valida os dados e envia uma mensagem formatada ao chat da Paulira
+   via Telegram Bot API.
+4. O cliente é redirecionado para `/paulirabeauty/obrigado`.
+
+Não há calendário nem verificação de disponibilidade — é só um **pedido**;
+a data/hora final é combinada manualmente com a Paulira depois de ela
+receber a mensagem no Telegram. Também não há lista de preços por agora —
+o cliente escolhe uma área de serviço genérica (Unhas, Cabelo, Estética
+Facial, Massagens, Maquilhagem ou "Outro") e o preço é combinado
+diretamente com ela.
+
 ## Adicionar um novo espaço
 
 Cada espaço vive na sua própria pasta dentro de `app/[locale]/`, por exemplo
@@ -165,7 +202,8 @@ Este projeto está preparado para deploy na Vercel:
 2. Criar e ligar a base de dados Postgres (ver "Configurar a base de dados"
    acima) e correr `db/init.sql`.
 3. Configurar as variáveis de ambiente `TELEGRAM_BOT_TOKEN`,
-   `TELEGRAM_CHAT_ID` e `AUTH_SECRET` no projeto.
+   `TELEGRAM_CHAT_ID`, `TELEGRAM_BOT_TOKEN_PAULIRA`,
+   `TELEGRAM_CHAT_ID_PAULIRA` e `AUTH_SECRET` no projeto.
 4. Correr `npm run seed:admin -- --username=... --password=...` para criar
    a primeira conta de admin.
 5. Associar o domínio `plum-angola.com` ao projeto nas definições de

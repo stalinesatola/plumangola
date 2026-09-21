@@ -3,10 +3,11 @@ type EnviarMensagemResultado =
   | { ok: false; erro: string };
 
 export async function enviarMensagemTelegram(
-  texto: string
+  texto: string,
+  credenciais?: { token?: string; chatId?: string }
 ): Promise<EnviarMensagemResultado> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const token = credenciais?.token ?? process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = credenciais?.chatId ?? process.env.TELEGRAM_CHAT_ID;
 
   if (!token || !chatId) {
     return {

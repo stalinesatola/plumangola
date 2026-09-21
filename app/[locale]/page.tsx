@@ -11,6 +11,11 @@ export default async function HomePage() {
       nome: t("dlaminiLoja.name"),
       descricao: t("dlaminiLoja.description"),
     },
+    {
+      slug: "paulirabeauty",
+      nome: t("paulirabeauty.name"),
+      descricao: t("paulirabeauty.description"),
+    },
   ];
 
   return (

@@ -6,6 +6,10 @@
     "dlaminiLoja": {
       "name": "Dlamini Loja",
       "description": "Espaço do agente revendedor Dlamini, com produtos de arthur-ford.com e pedidos enviados diretamente por Telegram."
+    },
+    "paulirabeauty": {
+      "name": "Paulira Beauty",
+      "description": "Estética & Bem-Estar — marca o teu horário e recebe confirmação diretamente por Telegram/WhatsApp."
     }
   },
   "DlaminiLoja": {
@@ -48,5 +52,50 @@
     "title": "Algo correu mal",
     "message": "Não foi possível carregar esta página. Tenta novamente daqui a pouco.",
     "retry": "Tentar novamente"
+  },
+  "PaulirabBeauty": {
+    "brand": "Plum Angola",
+    "storeName": "Paulira Beauty",
+    "backToHub": "← plum-angola.com",
+    "tagline": "Estética & Bem-Estar.",
+    "hoursLabel": "Horário",
+    "hours": "Segunda a Domingo, 08:00 às 18:30",
+    "phoneLabel": "Telefone",
+    "addressLabel": "Morada",
+    "address": "Estrada do Patriota",
+    "homeService": "➡️ Serviços ao Domicílio",
+    "whatsappButton": "Falar no WhatsApp",
+    "servicesHeading": "Áreas de serviço"
+  },
+  "AppointmentForm": {
+    "title": "Marcar horário",
+    "name": "Nome",
+    "contact": "Telefone / WhatsApp",
+    "service": "Serviço pretendido",
+    "otherServicePlaceholder": "Diz-nos qual",
+    "date": "Data preferida (opcional)",
+    "time": "Hora preferida (opcional)",
+    "location": "Local",
+    "locationSalon": "No salão",
+    "locationHome": "Ao domicílio",
+    "addressPlaceholder": "Morada para o atendimento",
+    "notes": "Observações (opcional)",
+    "submit": "Enviar pedido de agendamento",
+    "submitting": "A enviar...",
+    "genericError": "Não foi possível enviar o pedido.",
+    "networkError": "Falha de rede. Tenta novamente.",
+    "category": {
+      "nails": "Unhas",
+      "hair": "Cabelo",
+      "facial": "Estética Facial",
+      "massage": "Massagens",
+      "makeup": "Maquilhagem",
+      "outro": "Outro"
+    }
+  },
+  "ObrigadoAgendamento": {
+    "title": "Pedido de agendamento enviado!",
+    "message": "A Paulira Beauty recebeu o teu pedido no Telegram e vai entrar em contacto contigo brevemente para confirmar o horário.",
+    "backButton": "Voltar à página"
   }
 }
