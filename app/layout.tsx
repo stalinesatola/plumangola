@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { getLocale } from "next-intl/server";
 import "./globals.css";
 
@@ -20,6 +21,7 @@ export default async function RootLayout({
     <html lang={locale}>
       <body className="min-h-screen bg-white text-gray-900 antialiased">
         {children}
+        <Analytics />
       </body>
     </html>
   );
