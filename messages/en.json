@@ -84,6 +84,13 @@
     "submitting": "Sending...",
     "genericError": "Could not send your request.",
     "networkError": "Network error. Please try again.",
+    "orDivider": "or",
+    "submitWhatsapp": "Send via WhatsApp",
+    "whatsappMessageTitle": "New appointment — Paulira Beauty",
+    "serviceLabel": "Service",
+    "dateLabel": "Date",
+    "timeLabel": "Time",
+    "notesLabel": "Notes",
     "category": {
       "nails": "Nails",
       "hair": "Hair",

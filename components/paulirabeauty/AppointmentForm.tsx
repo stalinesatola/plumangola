@@ -1,18 +1,62 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 
 type Estado = "idle" | "enviando" | "erro";
 
+const WHATSAPP_NUMERO = "244922809707";
+
 export function AppointmentForm() {
   const t = useTranslations("AppointmentForm");
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const [estado, setEstado] = useState<Estado>("idle");
   const [erro, setErro] = useState<string | null>(null);
   const [servico, setServico] = useState("nails");
   const [local, setLocal] = useState("salao");
+
+  function obterServicoFinal(formData: FormData) {
+    return servico === "outro"
+      ? String(formData.get("servicoOutro") ?? "")
+      : t(`category.${servico}`);
+  }
+
+  function handleWhatsApp() {
+    const form = formRef.current;
+    if (!form || !form.reportValidity()) return;
+
+    const formData = new FormData(form);
+    const localFinal = local === "domicilio" ? t("locationHome") : t("locationSalon");
+    const linhas = [
+      t("whatsappMessageTitle"),
+      "",
+      `${t("serviceLabel")}: ${obterServicoFinal(formData)}`,
+      `${t("name")}: ${formData.get("nomeCliente")}`,
+      `${t("contact")}: ${formData.get("contacto")}`,
+    ];
+
+    const data = formData.get("dataPreferida");
+    if (data) linhas.push(`${t("dateLabel")}: ${data}`);
+    const hora = formData.get("horaPreferida");
+    if (hora) linhas.push(`${t("timeLabel")}: ${hora}`);
+
+    linhas.push(`${t("location")}: ${localFinal}`);
+    const morada = formData.get("morada");
+    if (local === "domicilio" && morada) {
+      linhas.push(`${t("addressPlaceholder")}: ${morada}`);
+    }
+    const observacoes = formData.get("observacoes");
+    if (observacoes) linhas.push(`${t("notesLabel")}: ${observacoes}`);
+
+    const texto = linhas.join("\n");
+    window.open(
+      `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(texto)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -20,11 +64,7 @@ export function AppointmentForm() {
     setErro(null);
 
     const formData = new FormData(event.currentTarget);
-
-    const servicoFinal =
-      servico === "outro"
-        ? String(formData.get("servicoOutro") ?? "")
-        : t(`category.${servico}`);
+    const servicoFinal = obterServicoFinal(formData);
 
     try {
       const resposta = await fetch("/api/telegram/appointment", {
@@ -60,7 +100,7 @@ export function AppointmentForm() {
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6">
       <h2 className="mb-4 text-lg font-semibold text-gray-900">{t("title")}</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-3">
         <label className="flex flex-col gap-1 text-sm">
           {t("name")}
           <input
@@ -176,6 +216,20 @@ export function AppointmentForm() {
           className="mt-2 rounded-lg bg-plum-600 px-4 py-2 font-semibold text-white transition hover:bg-plum-700 disabled:cursor-not-allowed disabled:bg-gray-300"
         >
           {estado === "enviando" ? t("submitting") : t("submit")}
+        </button>
+
+        <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-gray-400">
+          <span className="h-px flex-1 bg-gray-200" aria-hidden="true" />
+          {t("orDivider")}
+          <span className="h-px flex-1 bg-gray-200" aria-hidden="true" />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleWhatsApp}
+          className="rounded-lg border border-green-600 px-4 py-2 font-semibold text-green-700 transition hover:bg-green-50"
+        >
+          {t("submitWhatsapp")}
         </button>
       </form>
     </div>

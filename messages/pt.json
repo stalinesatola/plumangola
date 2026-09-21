@@ -84,6 +84,13 @@
     "submitting": "A enviar...",
     "genericError": "Não foi possível enviar o pedido.",
     "networkError": "Falha de rede. Tenta novamente.",
+    "orDivider": "ou",
+    "submitWhatsapp": "Enviar por WhatsApp",
+    "whatsappMessageTitle": "Novo agendamento — Paulira Beauty",
+    "serviceLabel": "Serviço",
+    "dateLabel": "Data",
+    "timeLabel": "Hora",
+    "notesLabel": "Observações",
     "category": {
       "nails": "Unhas",
       "hair": "Cabelo",
