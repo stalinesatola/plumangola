@@ -6,6 +6,10 @@
     "dlaminiLoja": {
       "name": "Dlamini Shop",
       "description": "Reseller Dlamini's space, featuring products from arthur-ford.com with orders sent directly via Telegram."
+    },
+    "paulirabeauty": {
+      "name": "Paulira Beauty",
+      "description": "Beauty & Wellness — book your appointment and get confirmation straight over Telegram/WhatsApp."
     }
   },
   "DlaminiLoja": {
@@ -48,5 +52,50 @@
     "title": "Something went wrong",
     "message": "We couldn't load this page. Please try again shortly.",
     "retry": "Try again"
+  },
+  "PaulirabBeauty": {
+    "brand": "Plum Angola",
+    "storeName": "Paulira Beauty",
+    "backToHub": "← plum-angola.com",
+    "tagline": "Beauty & Wellness.",
+    "hoursLabel": "Hours",
+    "hours": "Monday to Sunday, 08:00 to 18:30",
+    "phoneLabel": "Phone",
+    "addressLabel": "Address",
+    "address": "Estrada do Patriota",
+    "homeService": "➡️ Home service available",
+    "whatsappButton": "Chat on WhatsApp",
+    "servicesHeading": "Service areas"
+  },
+  "AppointmentForm": {
+    "title": "Book an appointment",
+    "name": "Name",
+    "contact": "Phone / WhatsApp",
+    "service": "Service you want",
+    "otherServicePlaceholder": "Tell us which one",
+    "date": "Preferred date (optional)",
+    "time": "Preferred time (optional)",
+    "location": "Location",
+    "locationSalon": "At the salon",
+    "locationHome": "At your home",
+    "addressPlaceholder": "Address for the appointment",
+    "notes": "Notes (optional)",
+    "submit": "Send appointment request",
+    "submitting": "Sending...",
+    "genericError": "Could not send your request.",
+    "networkError": "Network error. Please try again.",
+    "category": {
+      "nails": "Nails",
+      "hair": "Hair",
+      "facial": "Facial Care",
+      "massage": "Massages",
+      "makeup": "Makeup",
+      "outro": "Other"
+    }
+  },
+  "ObrigadoAgendamento": {
+    "title": "Appointment request sent!",
+    "message": "Paulira Beauty received your request on Telegram and will reach out shortly to confirm the time.",
+    "backButton": "Back to page"
   }
 }
