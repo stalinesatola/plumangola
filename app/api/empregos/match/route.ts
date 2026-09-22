@@ -18,8 +18,38 @@ const LOCALIZACAO_DEFEITO = "Luanda, Angola";
 const MAX_VAGAS = 12;
 
 export async function POST(request: NextRequest) {
+  try {
+    return await handlePost(request);
+  } catch (error) {
+    // Última rede de segurança: qualquer erro não tratado abaixo (falha de
+    // ligação à base de dados, falha inesperada da API da Anthropic, etc.)
+    // devolve sempre JSON — sem isto, o Next.js devolve uma página de erro
+    // HTML que o formulário não consegue interpretar e mostra "falha de
+    // rede" ao utilizador, escondendo a causa real (que fica no log).
+    console.error("Erro não tratado em /api/empregos/match:", error);
+    return NextResponse.json(
+      { erro: "Não foi possível processar o pedido. Tenta novamente mais tarde." },
+      { status: 500 }
+    );
+  }
+}
+
+async function handlePost(request: NextRequest): Promise<NextResponse> {
   const ip = getClienteIp(request);
-  const permitido = await verificarLimite(`empregos-match:${ip}`, LIMITE_PEDIDOS, JANELA_SEGUNDOS);
+  let permitido: boolean;
+  try {
+    permitido = await verificarLimite(`empregos-match:${ip}`, LIMITE_PEDIDOS, JANELA_SEGUNDOS);
+  } catch (error) {
+    // Falha ao aceder à tabela de rate-limiting (ex: `rate_limit_events` não
+    // existe ainda na base de dados ligada — ver README "Configurar a base
+    // de dados"). Falha fechado: este endpoint tem custo real em chamadas à
+    // API da Anthropic, por isso não avança sem conseguir aplicar o limite.
+    console.error("Falha ao verificar rate limit:", error);
+    return NextResponse.json(
+      { erro: "Este serviço não está disponível de momento. Tenta novamente mais tarde." },
+      { status: 503 }
+    );
+  }
   if (!permitido) {
     return NextResponse.json(
       { erro: "Demasiados pedidos seguidos. Aguarda uns minutos e tenta novamente." },
