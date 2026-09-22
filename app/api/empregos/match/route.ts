@@ -15,7 +15,13 @@ const LIMITE_PEDIDOS = 3;
 const JANELA_SEGUNDOS = 15 * 60;
 const TAMANHO_MAXIMO_KB = 500;
 const LOCALIZACAO_DEFEITO = "Luanda, Angola";
-const MAX_VAGAS = 12;
+// TEMPORÁRIO: reduzido de 12 para 2 enquanto ANTHROPIC_API_KEY estiver
+// inválida — nesse estado, TODAS as chamadas (perfil + cada vaga) passam
+// pelo fallback NVIDIA (modelo de raciocínio, lento), e pontuar muitas
+// vagas em paralelo estoura o limite de 60s da função (maxDuration acima),
+// devolvendo 504 sem nenhum resultado. Repor para 12 assim que a chave da
+// Anthropic voltar a funcionar.
+const MAX_VAGAS = 2;
 
 export async function POST(request: NextRequest) {
   try {
