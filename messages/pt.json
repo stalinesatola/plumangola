@@ -10,6 +10,10 @@
     "paulirabeauty": {
       "name": "Paulira Beauty",
       "description": "Estética & Bem-Estar — marca o teu horário e recebe confirmação diretamente por Telegram/WhatsApp."
+    },
+    "empregos": {
+      "name": "Empregos",
+      "description": "Carrega o teu CV e vê vagas em Angola compatíveis com as tuas competências, avaliadas por IA."
     }
   },
   "DlaminiLoja": {
@@ -104,5 +108,27 @@
     "title": "Pedido de agendamento enviado!",
     "message": "A Paulira Beauty recebeu o teu pedido no Telegram e vai entrar em contacto contigo brevemente para confirmar o horário.",
     "backButton": "Voltar à página"
+  },
+  "Empregos": {
+    "brand": "Plum Angola",
+    "storeName": "Empregos",
+    "backToHub": "← plum-angola.com",
+    "tagline": "Encontra vagas em Angola compatíveis com o teu CV.",
+    "description": "Carrega o teu currículo em PDF e recebe uma lista de vagas atuais em Angola, avaliadas e ordenadas por compatibilidade com as tuas competências e experiência."
+  },
+  "CvMatchForm": {
+    "title": "Procurar vagas",
+    "cvLabel": "Currículo (PDF)",
+    "locationLabel": "Localização alvo",
+    "queryLabel": "Palavras-chave (opcional)",
+    "queryPlaceholder": "ex: engenheiro de software",
+    "submit": "Procurar vagas",
+    "submitting": "A analisar o teu CV e a procurar vagas... isto pode demorar até um minuto.",
+    "genericError": "Não foi possível processar o pedido.",
+    "networkError": "Falha de rede. Tenta novamente.",
+    "sourcesFailedWarning": "Algumas fontes falharam ({sources}); a mostrar resultados das restantes.",
+    "noResults": "Nenhuma vaga encontrada para este perfil e localização.",
+    "sourceLabel": "fonte",
+    "viewJob": "Ver vaga"
   }
 }
