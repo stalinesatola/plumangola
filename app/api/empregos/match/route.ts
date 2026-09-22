@@ -100,6 +100,11 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ erro: "Apenas ficheiros PDF são suportados." }, { status: 422 });
   }
   if (file.size > TAMANHO_MAXIMO_KB * 1024) {
+    console.error(`Ficheiro acima do limite de ${TAMANHO_MAXIMO_KB}KB recusado (${file.size} bytes, ip: ${ip}).`);
+    await notificarErro(
+      "empregos-match:file-too-large",
+      `Ficheiro de ${file.size} bytes recusado (limite: ${TAMANHO_MAXIMO_KB}KB, ip: ${ip}).`
+    );
     return NextResponse.json(
       { erro: `O ficheiro excede o limite de ${TAMANHO_MAXIMO_KB}KB.` },
       { status: 422 }
