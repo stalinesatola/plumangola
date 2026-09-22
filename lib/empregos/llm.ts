@@ -11,8 +11,12 @@ import OpenAI from "openai";
 
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-5";
 // Ver o catálogo de modelos gratuitos em https://build.nvidia.com — os IDs
-// dos modelos podem mudar ao longo do tempo, por isso é configurável.
-const NVIDIA_MODEL = process.env.NVIDIA_MODEL || "meta/llama-3.1-70b-instruct";
+// dos modelos podem mudar ao longo do tempo, por isso é configurável. Nota:
+// uma chave gratuita fica tipicamente limitada ao modelo da página onde foi
+// gerada (testado: outros modelos devolvem 404 com a mesma chave). O
+// default abaixo é um modelo de raciocínio (lento, chain-of-thought longo)
+// — ver README.md "Fallback gratuito (NVIDIA NIM)" para detalhes.
+const NVIDIA_MODEL = process.env.NVIDIA_MODEL || "nvidia/nemotron-3-super-120b-a12b";
 
 export interface LlmClients {
   anthropic: Anthropic;
