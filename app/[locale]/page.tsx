@@ -16,6 +16,11 @@ export default async function HomePage() {
       nome: t("paulirabeauty.name"),
       descricao: t("paulirabeauty.description"),
     },
+    {
+      slug: "empregos",
+      nome: t("empregos.name"),
+      descricao: t("empregos.description"),
+    },
   ];
 
   return (

@@ -11,6 +11,7 @@
     "seed:admin": "tsx scripts/seed-admin.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
     "@vercel/analytics": "^2.0.1",
     "@vercel/postgres": "^0.10.0",
     "bcryptjs": "^2.4.3",
@@ -18,7 +19,8 @@
     "next": "^16.3.5",
     "next-intl": "^4.14.5",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "unpdf": "^1.8.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

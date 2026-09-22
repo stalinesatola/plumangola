@@ -10,6 +10,10 @@
     "paulirabeauty": {
       "name": "Paulira Beauty",
       "description": "Beauty & Wellness — book your appointment and get confirmation straight over Telegram/WhatsApp."
+    },
+    "empregos": {
+      "name": "Jobs",
+      "description": "Upload your CV and see job openings in Angola matching your skills, evaluated by AI."
     }
   },
   "DlaminiLoja": {
@@ -104,5 +108,27 @@
     "title": "Appointment request sent!",
     "message": "Paulira Beauty received your request on Telegram and will reach out shortly to confirm the time.",
     "backButton": "Back to page"
+  },
+  "Empregos": {
+    "brand": "Plum Angola",
+    "storeName": "Jobs",
+    "backToHub": "← plum-angola.com",
+    "tagline": "Find job openings in Angola matching your CV.",
+    "description": "Upload your CV as a PDF and get a list of current job openings in Angola, evaluated and ranked by how well they match your skills and experience."
+  },
+  "CvMatchForm": {
+    "title": "Search for jobs",
+    "cvLabel": "CV (PDF)",
+    "locationLabel": "Target location",
+    "queryLabel": "Keywords (optional)",
+    "queryPlaceholder": "e.g. software engineer",
+    "submit": "Search for jobs",
+    "submitting": "Analyzing your CV and searching for jobs... this can take up to a minute.",
+    "genericError": "Could not process the request.",
+    "networkError": "Network error. Please try again.",
+    "sourcesFailedWarning": "Some sources failed ({sources}); showing results from the rest.",
+    "noResults": "No jobs found for this profile and location.",
+    "sourceLabel": "source",
+    "viewJob": "View job"
   }
 }

@@ -185,6 +185,66 @@ o cliente escolhe uma área de serviço genérica (Unhas, Cabelo, Estética
 Facial, Massagens, Maquilhagem ou "Outro") e o preço é combinado
 diretamente com ela.
 
+## Espaço: Empregos (`/empregos`)
+
+Ferramenta de procura de emprego: o utilizador carrega o seu CV em PDF e
+recebe uma lista de vagas atuais em Angola (via LinkedIn, por agora — ver
+"Falta fazer" abaixo), avaliadas e ordenadas por compatibilidade com o seu
+perfil.
+
+Adaptado do subsistema equivalente do repositório
+[stalinesatola/ai-job-search](https://github.com/stalinesatola/ai-job-search)
+(`webapp/`), reescrito em TypeScript para correr como parte desta aplicação
+Next.js em vez de um serviço Python separado.
+
+### Como funciona
+
+1. O utilizador carrega um CV em PDF no formulário (`components/empregos/CvMatchForm.tsx`).
+2. `POST /api/empregos/match` extrai o texto do PDF (`pdf-parse`) e usa a API
+   da Anthropic para gerar um perfil estruturado (competências, senioridade,
+   localização) — ver `lib/empregos/prompts.ts` e `lib/empregos/scoring.ts`.
+3. Procura vagas no LinkedIn (`lib/empregos/linkedin.ts`, endpoints públicos
+   `jobs-guest`, sem autenticação — **uso pessoal/baixo volume apenas**, ver
+   nota de ToS no ficheiro) com a localização alvo (por omissão, "Luanda,
+   Angola").
+4. Cada vaga é avaliada contra o perfil com uma rubrica de 5 dimensões
+   (Competências Técnicas 30%, Experiência 25%, Fit Comportamental 15%,
+   Alinhamento de Carreira 30%, Localização eliminatório), incluindo um
+   filtro de elegibilidade adaptado ao enquadramento legal angolano (Lei
+   Geral do Trabalho / visto de trabalho) em vez de um filtro de
+   cidadania/residência permanente estilo UE. **Esta reescrita do filtro de
+   elegibilidade é um ponto de partida razoável, não uma referência jurídica
+   verificada** — recomenda-se revisão por alguém com conhecimento atualizado
+   da legislação laboral angolana antes de confiar cegamente nos vereditos.
+5. O resultado ordenado é devolvido ao formulário e mostrado na mesma página.
+
+### Configurar
+
+Define `ANTHROPIC_API_KEY` em `.env.local` e nas *Environment Variables* do
+projeto na Vercel (ver `.env.example`). Sem esta variável, `/empregos`
+mostra o formulário mas o pedido de avaliação falha com um erro 503.
+
+O endpoint usa o mesmo rate-limiter baseado em Postgres que `/paulirabeauty`
+(`lib/rate-limit.ts`, tabela `rate_limit_events`) — precisa de `POSTGRES_URL`
+configurado (ver "Configurar a base de dados" acima), com um limite mais
+apertado (3 pedidos / 15 min por IP) por causa do custo de cada pedido em
+chamadas à API da Anthropic.
+
+### Limitações conhecidas / falta fazer
+
+- **Só LinkedIn por agora.** Não existe (ainda) um scraper para um portal de
+  emprego dedicado ao mercado angolano (ex: Jobartis). Pode ser adicionado
+  seguindo o mesmo padrão de `lib/empregos/linkedin.ts` — um novo ficheiro
+  `lib/empregos/<portal>.ts` com uma função de pesquisa que devolve
+  `JobCard[]`, chamada em paralelo com `searchLinkedInJobs` em
+  `app/api/empregos/match/route.ts`.
+- **Interface bilingue (PT/EN), avaliação só em português.** Os textos fixos
+  da interface seguem o idioma escolhido (`messages/pt.json` /
+  `messages/en.json`), mas o resumo do perfil, os vereditos e as notas de
+  cada vaga vêm sempre em português, porque os prompts em
+  `lib/empregos/prompts.ts` estão escritos nessa língua.
+- Nenhum dado do CV ou dos resultados é guardado — cada pedido é stateless.
+
 ## Adicionar um novo espaço
 
 Cada espaço vive na sua própria pasta dentro de `app/[locale]/`, por exemplo
