@@ -1,11 +1,20 @@
 "use client";
 
+import { useEffect } from "react";
+import { reportarErroCliente } from "@/lib/reportar-erro-cliente";
+
 export default function GlobalError({
+  error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    console.error("Erro global:", error);
+    reportarErroCliente("global", error);
+  }, [error]);
+
   // Nota: este layout substitui por completo o app/layout.tsx quando ativa
   // (erro no próprio layout raiz), por isso não pode depender do CSS do
   // Tailwind carregado lá — usa estilos inline como rede de segurança.

@@ -292,6 +292,48 @@ Duas notas importantes, confirmadas ao testar em produção:
   "Fallback gratuito" acima. Repor para 12 assim que `ANTHROPIC_API_KEY`
   estiver a funcionar normalmente.
 
+## Sistema de alertas (evitar erros silenciosos)
+
+Vários incidentes em produção (tabela `rate_limit_events` em falta,
+`ANTHROPIC_API_KEY` inválida, timeout de 60s em `/empregos`) só foram
+descobertos porque alguém testou manualmente — o erro real ficava só nos
+logs da Vercel, invisível até alguém ir lá espreitar. `lib/alerts.ts`
+fecha esse ponto cego: sempre que um `catch` relevante no servidor (ou um
+error boundary no cliente) apanha um erro, envia uma notificação para um
+bot de Telegram dedicado a alertas.
+
+**Configuração:**
+- Cria um bot novo com o [@BotFather](https://t.me/BotFather) (mesmo
+  processo do bot da Paulira, ver acima) e usa esse token/chat_id só para
+  alertas — não reutilizar os bots de negócio.
+- Define `TELEGRAM_BOT_TOKEN_ALERTS` e `TELEGRAM_CHAT_ID_ALERTS` (ver
+  `.env.example`).
+- Corre `db/migrations/003_add_alert_events.sql` contra a base de dados
+  (instalações novas já ficam com a tabela ao correr `db/init.sql`).
+
+**Como funciona:**
+- `notificarErro(chave, mensagem)` em `lib/alerts.ts` é chamado a partir dos
+  `catch` já existentes (rate-limit, `ANTHROPIC_API_KEY` em falta, falha ao
+  extrair PDF, falha ao pontuar vagas, falhas de Telegram do Dlamini/Paulira,
+  falhas de escrita no painel de admin).
+- Throttling por `chave` (Postgres, tabela `alert_events`, mesmo padrão de
+  `lib/rate-limit.ts`): no máximo 1 alerta da mesma chave a cada 30 minutos,
+  para não inundar o Telegram quando o mesmo erro se repete em vários
+  pedidos seguidos.
+- Nunca lança exceção — uma falha no próprio envio do alerta (BD ou
+  Telegram em baixo) nunca derruba o pedido original do utilizador.
+- **Erros do cliente**: os `error.tsx` de cada espaço (e `global-error.tsx`)
+  reenviam o erro para `POST /api/alerts/client-error` via
+  `lib/reportar-erro-cliente.ts`, que por sua vez chama `notificarErro` —
+  antes disso, um erro de render no browser só aparecia na consola do
+  utilizador, nunca chegava a ninguém.
+
+Para adicionar um novo alerta a um `catch` existente: importar
+`notificarErro` de `@/lib/alerts` e chamar
+`await notificarErro("<área>:<causa>", mensagem)` a seguir ao
+`console.error` já existente — sem alterar a resposta devolvida ao
+utilizador.
+
 ## Adicionar um novo espaço
 
 Cada espaço vive na sua própria pasta dentro de `app/[locale]/`, por exemplo

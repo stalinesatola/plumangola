@@ -46,3 +46,12 @@ CREATE TABLE IF NOT EXISTS rate_limit_events (
 );
 
 CREATE INDEX IF NOT EXISTS idx_rate_limit_chave_criado ON rate_limit_events (chave, criado_em);
+
+-- Throttling dos alertas internos (Telegram) -- ver lib/alerts.ts
+CREATE TABLE IF NOT EXISTS alert_events (
+  id         SERIAL PRIMARY KEY,
+  chave      TEXT NOT NULL,
+  criado_em  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_alert_events_chave_criado ON alert_events (chave, criado_em);

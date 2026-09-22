@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { reportarErroCliente } from "@/lib/reportar-erro-cliente";
 
 export default function DlaminiLojaError({
   error,
@@ -14,6 +15,7 @@ export default function DlaminiLojaError({
 
   useEffect(() => {
     console.error("Erro na Dlamini Loja:", error);
+    reportarErroCliente("dlamini-loja", error);
   }, [error]);
 
   return (
