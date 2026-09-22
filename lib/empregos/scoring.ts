@@ -20,7 +20,7 @@ function toStringArray(value: unknown): string[] {
 }
 
 export async function extractProfile(clients: LlmClients, cvText: string): Promise<CandidateProfile> {
-  const { text: raw } = await completeText(clients, PROFILE_EXTRACTION_SYSTEM_PROMPT, cvText, 1024);
+  const { text: raw } = await completeText(clients, PROFILE_EXTRACTION_SYSTEM_PROMPT, cvText, 2048);
   const data = parseJsonObject(raw);
 
   return {
@@ -60,7 +60,11 @@ async function scoreOne(clients: LlmClients, profile: CandidateProfile, job: Job
       clients,
       JOB_EVALUATION_SYSTEM_PROMPT,
       buildUserMessage(profile, job),
-      512
+      // Modelos de raciocínio (ex: fallback NVIDIA nemotron) emitem um
+      // chain-of-thought longo antes do JSON final — 512 tokens cortava a
+      // resposta a meio do raciocínio em várias vagas, antes de chegar ao
+      // JSON, fazendo esta chamada falhar (ver parseJsonObject abaixo).
+      2048
     );
     const data = parseJsonObject(raw);
     score = typeof data.score === "number" ? data.score : 0;
