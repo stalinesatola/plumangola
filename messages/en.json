@@ -14,6 +14,10 @@
     "empregos": {
       "name": "Jobs",
       "description": "Upload your CV and see job openings in Angola matching your skills, evaluated by AI."
+    },
+    "utente": {
+      "name": "Citizen",
+      "description": "A guide to Portal do Contribuinte services, with direct access to the official Minfin site."
     }
   },
   "DlaminiLoja": {
@@ -130,5 +134,45 @@
     "noResults": "No jobs found for this profile and location.",
     "sourceLabel": "source",
     "viewJob": "View job"
+  },
+  "Utente": {
+    "brand": "Plum Angola",
+    "storeName": "Citizen",
+    "backToHub": "← plum-angola.com",
+    "heading": "Portal do Contribuinte — service guide",
+    "intro": "A simple summary of the main Portal do Contribuinte services (Angola's Ministry of Finance), with direct access to each one.",
+    "disclaimer": "This space is informational only and independent — it is not affiliated with the Ministry of Finance. We do not collect any personal or tax data here. To look up, register, or pay, always use the official Minfin site through the links below.",
+    "servicesHeading": "Services",
+    "officialLinkButton": "Go to official service",
+    "servicos": {
+      "cadastro": {
+        "nome": "Taxpayer Registration",
+        "descricao": "Registration of individual and corporate taxpayers with the Ministry of Finance."
+      },
+      "liquidacoes": {
+        "nome": "Tax Assessments",
+        "descricao": "Lookup and issuance of tax amounts owed."
+      },
+      "pagamentos": {
+        "nome": "Payments",
+        "descricao": "Payment of taxes and fees through authorized entities."
+      },
+      "certificado": {
+        "nome": "Verify Certificate",
+        "descricao": "Validation of certificates issued by the Portal do Contribuinte."
+      },
+      "produtoresSoftware": {
+        "nome": "Software Producers",
+        "descricao": "Registration and management for certified invoicing software producers."
+      },
+      "graficasTipografias": {
+        "nome": "Printers & Typographies",
+        "descricao": "Registration and management for printers authorized to issue tax documents."
+      },
+      "validarDocumentos": {
+        "nome": "Validate Documents",
+        "descricao": "Validation of tax documents issued through the portal."
+      }
+    }
   }
 }

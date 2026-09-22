@@ -21,6 +21,11 @@ export default async function HomePage() {
       nome: t("empregos.name"),
       descricao: t("empregos.description"),
     },
+    {
+      slug: "utente",
+      nome: t("utente.name"),
+      descricao: t("utente.description"),
+    },
   ];
 
   return (
