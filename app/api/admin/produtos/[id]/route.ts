@@ -6,6 +6,7 @@ import {
   NovoProdutoInput,
 } from "@/lib/produtos";
 import { validarPayloadProduto } from "@/lib/validar-produto";
+import { notificarErro } from "@/lib/alerts";
 
 export async function PATCH(
   request: NextRequest,
@@ -67,6 +68,10 @@ export async function PATCH(
       );
     }
     console.error(`Falha ao atualizar produto ${id}:`, erro);
+    await notificarErro(
+      "admin-produtos:atualizar",
+      erro instanceof Error ? erro.message : String(erro)
+    );
     return NextResponse.json(
       { ok: false, erro: "Não foi possível guardar o produto. Tenta novamente." },
       { status: 500 }
@@ -89,6 +94,10 @@ export async function DELETE(
     return NextResponse.json({ ok: true });
   } catch (erro) {
     console.error(`Falha ao apagar produto ${id}:`, erro);
+    await notificarErro(
+      "admin-produtos:apagar",
+      erro instanceof Error ? erro.message : String(erro)
+    );
     return NextResponse.json(
       { ok: false, erro: "Não foi possível apagar o produto. Tenta novamente." },
       { status: 500 }

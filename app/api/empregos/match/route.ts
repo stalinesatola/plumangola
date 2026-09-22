@@ -5,6 +5,7 @@ import { buildLlmClients } from "@/lib/empregos/llm";
 import { getClienteIp, verificarLimite } from "@/lib/rate-limit";
 import { extractProfile, rankJobs } from "@/lib/empregos/scoring";
 import type { JobCard, MatchResponse } from "@/lib/empregos/types";
+import { notificarErro } from "@/lib/alerts";
 
 export const runtime = "nodejs";
 // Vários pedidos à API da Anthropic em série/paralelo (perfil + pontuação
@@ -33,6 +34,10 @@ export async function POST(request: NextRequest) {
     // HTML que o formulário não consegue interpretar e mostra "falha de
     // rede" ao utilizador, escondendo a causa real (que fica no log).
     console.error("Erro não tratado em /api/empregos/match:", error);
+    await notificarErro(
+      "empregos-match:erro-nao-tratado",
+      error instanceof Error ? error.message : String(error)
+    );
     return NextResponse.json(
       { erro: "Não foi possível processar o pedido. Tenta novamente mais tarde." },
       { status: 500 }
@@ -51,6 +56,10 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
     // de dados"). Falha fechado: este endpoint tem custo real em chamadas à
     // API da Anthropic, por isso não avança sem conseguir aplicar o limite.
     console.error("Falha ao verificar rate limit:", error);
+    await notificarErro(
+      "empregos-match:rate-limit-db",
+      error instanceof Error ? error.message : String(error)
+    );
     return NextResponse.json(
       { erro: "Este serviço não está disponível de momento. Tenta novamente mais tarde." },
       { status: 503 }
@@ -66,6 +75,7 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     console.error("ANTHROPIC_API_KEY não configurada.");
+    await notificarErro("empregos-match:anthropic-key-missing", "ANTHROPIC_API_KEY não configurada.");
     return NextResponse.json(
       { erro: "Este serviço não está configurado no momento. Tenta novamente mais tarde." },
       { status: 503 }
@@ -90,6 +100,11 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ erro: "Apenas ficheiros PDF são suportados." }, { status: 422 });
   }
   if (file.size > TAMANHO_MAXIMO_KB * 1024) {
+    console.error(`Ficheiro acima do limite de ${TAMANHO_MAXIMO_KB}KB recusado (${file.size} bytes, ip: ${ip}).`);
+    await notificarErro(
+      "empregos-match:file-too-large",
+      `Ficheiro de ${file.size} bytes recusado (limite: ${TAMANHO_MAXIMO_KB}KB, ip: ${ip}).`
+    );
     return NextResponse.json(
       { erro: `O ficheiro excede o limite de ${TAMANHO_MAXIMO_KB}KB.` },
       { status: 422 }
@@ -102,6 +117,10 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
     cvText = await extractTextFromPdf(buffer);
   } catch (error) {
     console.error("Falha ao extrair texto do PDF:", error);
+    await notificarErro(
+      "empregos-match:pdf-extract",
+      error instanceof Error ? error.message : String(error)
+    );
     return NextResponse.json(
       { erro: "Não foi possível ler o ficheiro PDF enviado." },
       { status: 422 }
@@ -130,6 +149,10 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
   } catch (error) {
     console.error("Falha ao pesquisar vagas no LinkedIn:", error);
     sourcesFailed.push("linkedin");
+    await notificarErro(
+      "empregos-match:linkedin-search",
+      error instanceof Error ? error.message : String(error)
+    );
   }
 
   const matches = await rankJobs(clients, profile, jobs);

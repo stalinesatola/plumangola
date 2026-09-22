@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { reportarErroCliente } from "@/lib/reportar-erro-cliente";
 
 export default function EmpregosError({
   error,
@@ -14,6 +15,7 @@ export default function EmpregosError({
 
   useEffect(() => {
     console.error("Erro em /empregos:", error);
+    reportarErroCliente("empregos", error);
   }, [error]);
 
   return (

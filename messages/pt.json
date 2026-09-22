@@ -130,6 +130,7 @@
     "submitting": "A analisar o teu CV e a procurar vagas... isto pode demorar até um minuto.",
     "genericError": "Não foi possível processar o pedido.",
     "networkError": "Falha de rede. Tenta novamente.",
+    "fileTooLarge": "O ficheiro excede o limite de 500KB. Escolhe um PDF mais pequeno.",
     "sourcesFailedWarning": "Algumas fontes falharam ({sources}); a mostrar resultados das restantes.",
     "noResults": "Nenhuma vaga encontrada para este perfil e localização.",
     "sourceLabel": "fonte",

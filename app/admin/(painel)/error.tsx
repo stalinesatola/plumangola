@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { reportarErroCliente } from "@/lib/reportar-erro-cliente";
 
 export default function AdminError({
   error,
@@ -11,6 +12,7 @@ export default function AdminError({
 }) {
   useEffect(() => {
     console.error("Erro no painel de admin:", error);
+    reportarErroCliente("admin", error);
   }, [error]);
 
   return (

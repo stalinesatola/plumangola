@@ -6,6 +6,8 @@ import type { MatchResponse } from "@/lib/empregos/types";
 
 type Estado = "idle" | "enviando" | "erro";
 
+const TAMANHO_MAXIMO_BYTES = 500 * 1024;
+
 function classeVeredito(verdict: string): string {
   const v = verdict.toLowerCase();
   if (v.includes("forte")) return "bg-green-50 text-green-700 border-green-200";
@@ -28,6 +30,12 @@ export function CvMatchForm() {
     setResultado(null);
 
     const formData = new FormData(event.currentTarget);
+    const file = formData.get("file");
+    if (file instanceof File && file.size > TAMANHO_MAXIMO_BYTES) {
+      setEstado("erro");
+      setErro(t("fileTooLarge"));
+      return;
+    }
 
     try {
       const resposta = await fetch("/api/empregos/match", {

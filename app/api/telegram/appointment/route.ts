@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { enviarMensagemTelegram } from "@/lib/telegram";
 import { getClienteIp, verificarLimite } from "@/lib/rate-limit";
+import { notificarErro } from "@/lib/alerts";
 
 const LIMITE_PEDIDOS = 5;
 const JANELA_SEGUNDOS = 10 * 60;
@@ -103,6 +104,7 @@ export async function POST(request: NextRequest) {
 
   if (!resultado.ok) {
     console.error("Falha ao enviar agendamento para o Telegram:", resultado.erro);
+    await notificarErro("telegram-appointment:falha-envio", resultado.erro);
     return NextResponse.json(
       { ok: false, erro: "Não foi possível enviar o pedido. Tenta novamente." },
       { status: 502 }

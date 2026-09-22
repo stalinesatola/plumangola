@@ -130,6 +130,7 @@
     "submitting": "Analyzing your CV and searching for jobs... this can take up to a minute.",
     "genericError": "Could not process the request.",
     "networkError": "Network error. Please try again.",
+    "fileTooLarge": "The file exceeds the 500KB limit. Choose a smaller PDF.",
     "sourcesFailedWarning": "Some sources failed ({sources}); showing results from the rest.",
     "noResults": "No jobs found for this profile and location.",
     "sourceLabel": "source",

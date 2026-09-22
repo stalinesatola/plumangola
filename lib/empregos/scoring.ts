@@ -1,6 +1,7 @@
 import { completeText, type LlmClients } from "./llm";
 import { JOB_EVALUATION_SYSTEM_PROMPT, PROFILE_EXTRACTION_SYSTEM_PROMPT } from "./prompts";
 import type { CandidateProfile, JobCard, JobMatch } from "./types";
+import { notificarErro } from "@/lib/alerts";
 
 function parseJsonObject(raw: string): Record<string, unknown> {
   let text = raw.trim();
@@ -72,6 +73,10 @@ async function scoreOne(clients: LlmClients, profile: CandidateProfile, job: Job
     notes = typeof data.notes === "string" ? data.notes : "";
   } catch (error) {
     console.error(`Falha ao avaliar a vaga ${job.id}:`, error);
+    await notificarErro(
+      "empregos-match:scoring",
+      error instanceof Error ? error.message : String(error)
+    );
   }
 
   return {
