@@ -222,13 +222,20 @@ Next.js em vez de um serviço Python separado.
 
 Define `ANTHROPIC_API_KEY` em `.env.local` e nas *Environment Variables* do
 projeto na Vercel (ver `.env.example`). Sem esta variável, `/empregos`
-mostra o formulário mas o pedido de avaliação falha com um erro 503.
+mostra o formulário mas o pedido de avaliação falha com um erro 503. **Esta
+chave é crítica para a velocidade e fiabilidade do endpoint** — ver secção
+seguinte sobre o fallback NVIDIA.
 
 O endpoint usa o mesmo rate-limiter baseado em Postgres que `/paulirabeauty`
 (`lib/rate-limit.ts`, tabela `rate_limit_events`) — precisa de `POSTGRES_URL`
 configurado (ver "Configurar a base de dados" acima), com um limite mais
 apertado (3 pedidos / 15 min por IP) por causa do custo de cada pedido em
 chamadas à API da Anthropic.
+
+O ficheiro de CV está limitado a **500KB** (`TAMANHO_MAXIMO_KB` em
+`app/api/empregos/match/route.ts`) — bastante apertado para um PDF real,
+sobretudo com formatação/imagens; CVs simples de texto normalmente cabem,
+mas vale a pena testar com CVs reais dos utilizadores.
 
 **Nota:** alterar variáveis de ambiente no projeto Vercel não precisa de
 novo deploy — são lidas em tempo de execução, o próximo pedido já as vê
@@ -244,9 +251,26 @@ gratuito da NVIDIA quando uma chamada à Anthropic falhar (erro, rate limit,
 sem crédito) — a Anthropic continua a ser a opção principal em todos os
 pedidos; a NVIDIA só entra como auxiliar numa falha pontual, nunca substitui
 a Anthropic por omissão. Sem `NVIDIA_API_KEY` configurada, uma falha da
-Anthropic devolve erro ao utilizador como antes (sem fallback). `NVIDIA_MODEL`
-é opcional (default `meta/llama-3.1-70b-instruct`) — consultar o catálogo em
-build.nvidia.com, os IDs de modelo mudam com o tempo.
+Anthropic devolve erro ao utilizador como antes (sem fallback).
+
+`NVIDIA_MODEL` é opcional (default `nvidia/nemotron-3-super-120b-a12b` — o
+antigo default `meta/llama-3.1-70b-instruct` foi descontinuado pela NVIDIA).
+Duas notas importantes, confirmadas ao testar em produção:
+
+- **As chaves gratuitas de build.nvidia.com costumam ficar limitadas a um
+  único modelo** (o da página onde a chave foi gerada) — testámos mais de
+  10 outros modelos do catálogo (`llama-3.1-nemotron-70b-instruct`,
+  `mistral-large-2-instruct`, etc.) com a mesma chave e todos devolveram
+  404. Para usar outro modelo, gera uma chave nova a partir da página
+  desse modelo em build.nvidia.com.
+- **`nemotron-3-super-120b-a12b` é um modelo de raciocínio** (emite um
+  chain-of-thought longo antes do JSON final) — mais lento e mais caro em
+  tokens do que a Anthropic. Se `ANTHROPIC_API_KEY` estiver inválida,
+  **todos** os pedidos passam por este fallback lento, o que pode
+  facilmente ultrapassar o limite de 60s (`maxDuration`) do endpoint e
+  devolver 504. Por isso `MAX_VAGAS` está temporariamente reduzido para 2
+  (ver nota no código) — a corrigir a `ANTHROPIC_API_KEY` é a forma real de
+  resolver isto, não apenas um paliativo.
 
 ### Limitações conhecidas / falta fazer
 
@@ -262,6 +286,11 @@ build.nvidia.com, os IDs de modelo mudam com o tempo.
   cada vaga vêm sempre em português, porque os prompts em
   `lib/empregos/prompts.ts` estão escritos nessa língua.
 - Nenhum dado do CV ou dos resultados é guardado — cada pedido é stateless.
+- **`MAX_VAGAS` temporariamente reduzido para 2** (era 12) em
+  `app/api/empregos/match/route.ts`, para evitar timeouts de 60s enquanto o
+  fallback NVIDIA (lento) estiver a ser usado em todos os pedidos — ver
+  "Fallback gratuito" acima. Repor para 12 assim que `ANTHROPIC_API_KEY`
+  estiver a funcionar normalmente.
 
 ## Adicionar um novo espaço
 
