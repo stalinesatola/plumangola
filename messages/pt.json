@@ -14,6 +14,10 @@
     "empregos": {
       "name": "Empregos",
       "description": "Carrega o teu CV e vê vagas em Angola compatíveis com as tuas competências, avaliadas por IA."
+    },
+    "utente": {
+      "name": "Utente",
+      "description": "Guia dos serviços do Portal do Contribuinte, com acesso direto ao site oficial do Minfin."
     }
   },
   "DlaminiLoja": {
@@ -130,5 +134,45 @@
     "noResults": "Nenhuma vaga encontrada para este perfil e localização.",
     "sourceLabel": "fonte",
     "viewJob": "Ver vaga"
+  },
+  "Utente": {
+    "brand": "Plum Angola",
+    "storeName": "Utente",
+    "backToHub": "← plum-angola.com",
+    "heading": "Portal do Contribuinte — guia de serviços",
+    "intro": "Um resumo simples dos principais serviços do Portal do Contribuinte (Ministério das Finanças de Angola), com acesso direto a cada um.",
+    "disclaimer": "Este espaço é apenas informativo e independente — não é afiliado ao Ministério das Finanças. Não recolhemos nenhum dado pessoal ou fiscal aqui. Para consultar, registar ou pagar, usa sempre o site oficial do Minfin através dos links abaixo.",
+    "servicesHeading": "Serviços",
+    "officialLinkButton": "Aceder ao serviço oficial",
+    "servicos": {
+      "cadastro": {
+        "nome": "Cadastro de Contribuinte",
+        "descricao": "Registo de contribuintes singulares e coletivos junto do Ministério das Finanças."
+      },
+      "liquidacoes": {
+        "nome": "Liquidações",
+        "descricao": "Consulta e emissão de liquidações de impostos devidos."
+      },
+      "pagamentos": {
+        "nome": "Pagamentos",
+        "descricao": "Pagamento de impostos e taxas junto das entidades autorizadas."
+      },
+      "certificado": {
+        "nome": "Verificar Certificado",
+        "descricao": "Validação de certificados emitidos pelo Portal do Contribuinte."
+      },
+      "produtoresSoftware": {
+        "nome": "Produtores de Software",
+        "descricao": "Registo e gestão para empresas produtoras de software de faturação certificado."
+      },
+      "graficasTipografias": {
+        "nome": "Gráficas e Tipografias",
+        "descricao": "Registo e gestão para gráficas e tipografias autorizadas a emitir documentos fiscais."
+      },
+      "validarDocumentos": {
+        "nome": "Validar Documentos",
+        "descricao": "Validação de documentos fiscais emitidos através do portal."
+      }
+    }
   }
 }
