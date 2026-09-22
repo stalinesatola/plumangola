@@ -1,7 +1,7 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { extractTextFromPdf } from "@/lib/empregos/cv-extract";
 import { searchLinkedInJobs } from "@/lib/empregos/linkedin";
+import { buildLlmClients } from "@/lib/empregos/llm";
 import { getClienteIp, verificarLimite } from "@/lib/rate-limit";
 import { extractProfile, rankJobs } from "@/lib/empregos/scoring";
 import type { JobCard, MatchResponse } from "@/lib/empregos/types";
@@ -108,9 +108,9 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const client = new Anthropic({ apiKey });
+  const clients = buildLlmClients(apiKey);
 
-  const profile = await extractProfile(client, cvText);
+  const profile = await extractProfile(clients, cvText);
 
   const searchLocation = location || profile.location || LOCALIZACAO_DEFEITO;
   const searchQuery = query || profile.headline || profile.primarySkills.slice(0, 3).join(" ");
@@ -126,7 +126,7 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
     sourcesFailed.push("linkedin");
   }
 
-  const matches = await rankJobs(client, profile, jobs);
+  const matches = await rankJobs(clients, profile, jobs);
 
   const summary =
     profile.summary ||

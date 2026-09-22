@@ -1,8 +1,6 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { completeText, type LlmClients } from "./llm";
 import { JOB_EVALUATION_SYSTEM_PROMPT, PROFILE_EXTRACTION_SYSTEM_PROMPT } from "./prompts";
 import type { CandidateProfile, JobCard, JobMatch } from "./types";
-
-const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-5";
 
 function parseJsonObject(raw: string): Record<string, unknown> {
   let text = raw.trim();
@@ -17,26 +15,13 @@ function parseJsonObject(raw: string): Record<string, unknown> {
   return JSON.parse(text.slice(start, end + 1));
 }
 
-function textFromResponse(response: Anthropic.Message): string {
-  return response.content
-    .filter((block): block is Anthropic.TextBlock => block.type === "text")
-    .map((block) => block.text)
-    .join("");
-}
-
 function toStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((v): v is string => typeof v === "string") : [];
 }
 
-export async function extractProfile(client: Anthropic, cvText: string): Promise<CandidateProfile> {
-  const response = await client.messages.create({
-    model: MODEL,
-    max_tokens: 1024,
-    system: PROFILE_EXTRACTION_SYSTEM_PROMPT,
-    messages: [{ role: "user", content: cvText }],
-  });
-
-  const data = parseJsonObject(textFromResponse(response));
+export async function extractProfile(clients: LlmClients, cvText: string): Promise<CandidateProfile> {
+  const { text: raw } = await completeText(clients, PROFILE_EXTRACTION_SYSTEM_PROMPT, cvText, 1024);
+  const data = parseJsonObject(raw);
 
   return {
     fullName: typeof data.fullName === "string" ? data.fullName : null,
@@ -65,19 +50,19 @@ function buildUserMessage(profile: CandidateProfile, job: JobCard): string {
   ].join("\n");
 }
 
-async function scoreOne(client: Anthropic, profile: CandidateProfile, job: JobCard): Promise<JobMatch> {
+async function scoreOne(clients: LlmClients, profile: CandidateProfile, job: JobCard): Promise<JobMatch> {
   let score = 0;
   let verdict = "Erro na avaliação";
   let notes = "Não foi possível avaliar esta vaga.";
 
   try {
-    const response = await client.messages.create({
-      model: MODEL,
-      max_tokens: 512,
-      system: JOB_EVALUATION_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: buildUserMessage(profile, job) }],
-    });
-    const data = parseJsonObject(textFromResponse(response));
+    const { text: raw } = await completeText(
+      clients,
+      JOB_EVALUATION_SYSTEM_PROMPT,
+      buildUserMessage(profile, job),
+      512
+    );
+    const data = parseJsonObject(raw);
     score = typeof data.score === "number" ? data.score : 0;
     verdict = typeof data.verdict === "string" ? data.verdict : "Sem compatibilidade";
     notes = typeof data.notes === "string" ? data.notes : "";
@@ -98,11 +83,11 @@ async function scoreOne(client: Anthropic, profile: CandidateProfile, job: JobCa
 }
 
 export async function rankJobs(
-  client: Anthropic,
+  clients: LlmClients,
   profile: CandidateProfile,
   jobs: JobCard[]
 ): Promise<JobMatch[]> {
   if (jobs.length === 0) return [];
-  const matches = await Promise.all(jobs.map((job) => scoreOne(client, profile, job)));
+  const matches = await Promise.all(jobs.map((job) => scoreOne(clients, profile, job)));
   return matches.sort((a, b) => b.score - a.score);
 }

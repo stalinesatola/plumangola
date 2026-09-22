@@ -200,7 +200,7 @@ Next.js em vez de um serviço Python separado.
 ### Como funciona
 
 1. O utilizador carrega um CV em PDF no formulário (`components/empregos/CvMatchForm.tsx`).
-2. `POST /api/empregos/match` extrai o texto do PDF (`pdf-parse`) e usa a API
+2. `POST /api/empregos/match` extrai o texto do PDF (`unpdf`) e usa a API
    da Anthropic para gerar um perfil estruturado (competências, senioridade,
    localização) — ver `lib/empregos/prompts.ts` e `lib/empregos/scoring.ts`.
 3. Procura vagas no LinkedIn (`lib/empregos/linkedin.ts`, endpoints públicos
@@ -229,6 +229,24 @@ O endpoint usa o mesmo rate-limiter baseado em Postgres que `/paulirabeauty`
 configurado (ver "Configurar a base de dados" acima), com um limite mais
 apertado (3 pedidos / 15 min por IP) por causa do custo de cada pedido em
 chamadas à API da Anthropic.
+
+**Nota:** alterar variáveis de ambiente no projeto Vercel não precisa de
+novo deploy — são lidas em tempo de execução, o próximo pedido já as vê
+(confirmado empiricamente). Lembrar de marcar o ambiente **Preview** (não só
+Production) se for isso que se está a testar.
+
+### Fallback gratuito (NVIDIA NIM)
+
+Opcionalmente, define `NVIDIA_API_KEY` (chave gratuita de
+[build.nvidia.com](https://build.nvidia.com), API compatível com o formato
+OpenAI) para que `lib/empregos/llm.ts` tente automaticamente um modelo
+gratuito da NVIDIA quando uma chamada à Anthropic falhar (erro, rate limit,
+sem crédito) — a Anthropic continua a ser a opção principal em todos os
+pedidos; a NVIDIA só entra como auxiliar numa falha pontual, nunca substitui
+a Anthropic por omissão. Sem `NVIDIA_API_KEY` configurada, uma falha da
+Anthropic devolve erro ao utilizador como antes (sem fallback). `NVIDIA_MODEL`
+é opcional (default `meta/llama-3.1-70b-instruct`) — consultar o catálogo em
+build.nvidia.com, os IDs de modelo mudam com o tempo.
 
 ### Limitações conhecidas / falta fazer
 
