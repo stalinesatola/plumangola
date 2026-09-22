@@ -13,7 +13,7 @@ export const maxDuration = 60;
 
 const LIMITE_PEDIDOS = 3;
 const JANELA_SEGUNDOS = 15 * 60;
-const TAMANHO_MAXIMO_MB = 8;
+const TAMANHO_MAXIMO_KB = 500;
 const LOCALIZACAO_DEFEITO = "Luanda, Angola";
 const MAX_VAGAS = 12;
 
@@ -83,9 +83,9 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
   if (file.type !== "application/pdf") {
     return NextResponse.json({ erro: "Apenas ficheiros PDF são suportados." }, { status: 422 });
   }
-  if (file.size > TAMANHO_MAXIMO_MB * 1024 * 1024) {
+  if (file.size > TAMANHO_MAXIMO_KB * 1024) {
     return NextResponse.json(
-      { erro: `O ficheiro excede o limite de ${TAMANHO_MAXIMO_MB}MB.` },
+      { erro: `O ficheiro excede o limite de ${TAMANHO_MAXIMO_KB}KB.` },
       { status: 422 }
     );
   }
