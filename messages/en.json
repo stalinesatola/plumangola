@@ -182,5 +182,132 @@
         "descricao": "Validation of tax documents issued through the portal."
       }
     }
+  },
+  "Site": {
+    "metaTitle": "Plum Angola — Websites, online stores, AI chatbots & automation",
+    "metaDescription": "IT and AI services from Angola to the world: websites, online stores, AI chatbots, automation, custom systems, support, consulting and training. Clear pricing in Kz and USD.",
+    "nav": {
+      "services": "Services",
+      "portfolio": "Portfolio",
+      "how": "How it works",
+      "contact": "Contact"
+    },
+    "hero": {
+      "eyebrow": "IT & AI Services · Luanda, Angola",
+      "title": "Technology that helps your business sell more.",
+      "subtitle": "Websites, online stores, AI chatbots and automation for businesses in Angola and abroad. Clear pricing in kwanzas and US dollars, and direct contact with the people doing the work.",
+      "ctaServices": "See services & pricing",
+      "ctaWhatsapp": "Chat on WhatsApp"
+    },
+    "offer": {
+      "title": "Launch offer",
+      "text": "20% off the implementation fee for our first 10 clients or until 31 March 2027, plus the 1st month free on monthly plans. Not combinable with other offers; does not apply to third-party costs. Eligibility is confirmed in the proposal."
+    },
+    "services": {
+      "title": "Services & packages",
+      "subtitle": "Three packages per service — Basic, Professional and Premium. Prices exclude VAT, per our 2026/2027 price list.",
+      "rateNote": "USD amounts are approximate, at the BNA reference rate: 1 USD = {rate} Kz ({date}). The contract price is the Kz amount. Price list valid until {validUntil}.",
+      "oneOff": "one-off",
+      "perMonth": "/month",
+      "plusMonthly": "+ {amount} /month",
+      "perHour": "/hour",
+      "from": "from",
+      "onRequest": "On request",
+      "deposit": "50% deposit: {kz} (≈ {usd})",
+      "payDeposit": "Pay 50% deposit",
+      "requestQuote": "Request a quote",
+      "noOnlineDeposit": "Contracted via proposal",
+      "notes": "Terms"
+    },
+    "pay": {
+      "redirecting": "Opening secure checkout…",
+      "error": "We couldn't start the payment. Please try again or contact us.",
+      "testMode": "Payments in test mode — no real money is charged."
+    },
+    "how": {
+      "title": "How it works",
+      "steps": [
+        "Pick a package or request a quote — we reply within 24 business hours.",
+        "We confirm the scope in a proposal (valid for 30 days).",
+        "Pay the deposit: 50% upfront (projects up to 500,000 Kz) — online by card or by bank transfer/Multicaixa Express.",
+        "We build and deliver; you pay the balance on delivery. Once paid in full, the solution and data are yours."
+      ],
+      "terms": "Projects above 500,000 Kz: 40% upfront, 30% on prototype approval and 30% on delivery. Monthly plans are paid in advance, no lock-in. Any discounts are applied to the final payment."
+    },
+    "portfolio": {
+      "title": "Portfolio & demos",
+      "subtitle": "Real projects, built and maintained by us — open them and try.",
+      "open": "Open",
+      "items": {
+        "dlaminiLoja": {
+          "tag": "Online store",
+          "description": "Reseller storefront with a catalogue managed in an admin panel and orders sent via Telegram."
+        },
+        "paulirabeauty": {
+          "tag": "Bookings",
+          "description": "Beauty salon site with online appointment booking and confirmation via Telegram/WhatsApp."
+        },
+        "empregos": {
+          "tag": "AI",
+          "description": "Upload a CV and see jobs in Angola scored for fit by AI."
+        },
+        "utente": {
+          "tag": "Digital guide",
+          "description": "Guide to Angola's Taxpayer Portal services, with direct links to the official Minfin site."
+        },
+        "batfichas": {
+          "tag": "Web platform",
+          "description": "Batalhão das Fichas — platform with plans, a Telegram bot and tools (18+, gamble responsibly)."
+        }
+      },
+      "otherSpaces": "Other spaces on plum-angola.com:"
+    },
+    "contact": {
+      "title": "Request a quote",
+      "subtitle": "Tell us what you need. We reply by email or WhatsApp within 24 business hours (weekdays, 8am–5pm Luanda time, UTC+1).",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "address": "Bairro Viana, Luanda, Angola",
+      "whatsappMessage": "Hello! I saw plum-angola.com and would like to request a quote."
+    },
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone / WhatsApp (optional)",
+      "company": "Company (optional)",
+      "country": "Country (optional)",
+      "service": "Service",
+      "package": "Package (optional)",
+      "anyPackage": "Not sure yet",
+      "other": "Other / not sure",
+      "message": "Describe your project",
+      "messagePlaceholder": "E.g. I need an online store for 50 products with card payments…",
+      "submit": "Send request",
+      "sending": "Sending…",
+      "success": "Request sent! We'll be in touch soon.",
+      "errorValidation": "Please check the highlighted fields.",
+      "errorLimit": "Too many requests in a row. Please wait a few minutes.",
+      "errorSend": "We couldn't send it right now. Please send your request via WhatsApp or email:",
+      "privacy": "We only use your data to reply to this request."
+    },
+    "footer": {
+      "company": "Staline Marques Satola — IT & AI Services",
+      "nif": "Tax ID (NIF) 000232783HO035",
+      "rights": "Prices exclude VAT. All rights reserved."
+    },
+    "success": {
+      "title": "Payment received — thank you!",
+      "text": "Your deposit has been recorded. We'll contact you within 24 business hours to schedule the kick-off meeting.",
+      "pending": "We haven't confirmed the payment yet. If you were charged, contact us with the reference below.",
+      "reference": "Reference",
+      "amount": "Amount",
+      "package": "Package",
+      "back": "Back to home"
+    },
+    "cancel": {
+      "title": "Payment cancelled",
+      "text": "Nothing was charged. You can try again or talk to us if you have questions.",
+      "back": "See services"
+    }
   }
 }
