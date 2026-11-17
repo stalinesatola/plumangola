@@ -2,6 +2,7 @@ import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { PlumLogo } from "@/components/PlumLogo";
 
 export default async function PaulirabBeautyLayout({
   children,
@@ -17,15 +18,13 @@ export default async function PaulirabBeautyLayout({
           <Link href="/paulirabeauty" className="flex items-center gap-3">
             <Image
               src="/paulirabeauty/logo.png"
-              alt={t("brand")}
+              alt={t("storeName")}
               width={40}
               height={40}
               className="rounded-full"
             />
             <span className="flex flex-col leading-tight">
-              <span className="text-xs uppercase tracking-widest text-plum-600">
-                {t("brand")}
-              </span>
+              <PlumLogo variant="mark" height={22} href={undefined} />
               <span className="text-lg font-bold text-gray-900">
                 {t("storeName")}
               </span>

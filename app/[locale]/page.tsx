@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { PlumLogo } from "@/components/PlumLogo";
 
 export default async function HomePage() {
   const t = await getTranslations("Hub");
@@ -57,15 +58,15 @@ export default async function HomePage() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-4xl flex-col gap-10 px-6 py-16">
-      <header className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold uppercase tracking-widest text-plum-600">
-            {t("eyebrow")}
-          </span>
+      <header className="flex flex-col gap-6">
+        <div className="flex items-center justify-between gap-4">
+          <PlumLogo variant="lockup" height={56} href={undefined} priority />
           <LanguageSwitcher />
         </div>
-        <h1 className="text-3xl font-bold sm:text-4xl">{t("title")}</h1>
-        <p className="max-w-2xl text-gray-600">{t("description")}</p>
+        <div className="flex flex-col gap-3">
+          <h1 className="text-3xl font-bold sm:text-4xl">{t("title")}</h1>
+          <p className="max-w-2xl text-gray-600">{t("description")}</p>
+        </div>
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2">
