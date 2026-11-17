@@ -82,6 +82,10 @@ export async function POST(request: NextRequest) {
     "metadata[sinal_kz]": String(sinal),
     "metadata[cambio]": `${KZ_POR_USD} Kz/USD (${DATA_CAMBIO})`,
     "payment_intent_data[description]": titulo,
+    // A conta Stripe tem Managed Payments ligado por defeito, o que exige um
+    // tax_code em cada produto. Por decisão do Plum.ton, o sinal é um Checkout
+    // normal na própria conta: desligamos o Managed Payments nesta sessão.
+    "managed_payments[enabled]": "false",
   });
 
   if (!resultado.ok) {
