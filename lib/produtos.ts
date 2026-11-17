@@ -1,6 +1,21 @@
 import { sql } from "@/lib/db";
 import { slugify } from "@/lib/slug";
 
+/**
+ * Campos visíveis na loja pública e no formulário de encomenda.
+ * Nunca inclui preço de compra, origem, stock numérico nem metadados internos.
+ */
+export type ProdutoPublico = {
+  slug: string;
+  nome: string;
+  descricao: string;
+  imagem: string;
+  categoria: string;
+  precoVenda: number;
+  moedaVenda: string;
+  disponivel: boolean;
+};
+
 export type Produto = {
   id: number;
   slug: string;
@@ -83,20 +98,36 @@ function mapRow(row: ProdutoRow): Produto {
   };
 }
 
+type ProdutoPublicoRow = {
+  slug: string;
+  nome: string;
+  descricao: string;
+  nome_en: string | null;
+  descricao_en: string | null;
+  imagem: string;
+  categoria: string;
+  preco_venda: string;
+  moeda_venda: string;
+  stock: number;
+  ativo: boolean;
+};
+
 /**
- * Devolve uma cópia do produto com nome/descrição substituídos pela versão
- * em inglês quando disponível e o locale pedido for "en". Usado apenas para
- * apresentação na loja pública — nunca altera os dados guardados na BD.
+ * Projeta uma linha da BD para o tipo público: localiza nome/descrição e
+ * expõe só se o produto está disponível, sem stock exacto nem custos.
  */
-export function localizarProduto(produto: Produto, locale: string): Produto {
-  if (locale === "en" && produto.nomeEn) {
-    return {
-      ...produto,
-      nome: produto.nomeEn,
-      descricao: produto.descricaoEn || produto.descricao,
-    };
-  }
-  return produto;
+function mapPublico(row: ProdutoPublicoRow, locale: string): ProdutoPublico {
+  const usarIngles = locale === "en" && Boolean(row.nome_en);
+  return {
+    slug: row.slug,
+    nome: usarIngles ? (row.nome_en as string) : row.nome,
+    descricao: usarIngles && row.descricao_en ? row.descricao_en : row.descricao,
+    imagem: row.imagem,
+    categoria: row.categoria,
+    precoVenda: Number(row.preco_venda),
+    moedaVenda: row.moeda_venda,
+    disponivel: row.ativo && row.stock > 0,
+  };
 }
 
 export function getProdutoStatus(
@@ -114,20 +145,30 @@ export function formatarPreco(preco: number, moeda: string): string {
   }).format(preco);
 }
 
-export async function listarProdutosPublicos(): Promise<Produto[]> {
-  const { rows } = await sql<ProdutoRow>`
-    SELECT * FROM produtos WHERE ativo = true ORDER BY categoria, nome
+export async function listarProdutosPublicos(
+  locale: string = "pt"
+): Promise<ProdutoPublico[]> {
+  const { rows } = await sql<ProdutoPublicoRow>`
+    SELECT slug, nome, descricao, nome_en, descricao_en, imagem, categoria,
+           preco_venda, moeda_venda, stock, ativo
+    FROM produtos
+    WHERE ativo = true
+    ORDER BY categoria, nome
   `;
-  return rows.map(mapRow);
+  return rows.map((row) => mapPublico(row, locale));
 }
 
 export async function getProdutoPublicoPorSlug(
-  slug: string
-): Promise<Produto | undefined> {
-  const { rows } = await sql<ProdutoRow>`
-    SELECT * FROM produtos WHERE ativo = true AND slug = ${slug}
+  slug: string,
+  locale: string = "pt"
+): Promise<ProdutoPublico | undefined> {
+  const { rows } = await sql<ProdutoPublicoRow>`
+    SELECT slug, nome, descricao, nome_en, descricao_en, imagem, categoria,
+           preco_venda, moeda_venda, stock, ativo
+    FROM produtos
+    WHERE ativo = true AND slug = ${slug}
   `;
-  return rows[0] ? mapRow(rows[0]) : undefined;
+  return rows[0] ? mapPublico(rows[0], locale) : undefined;
 }
 
 export async function listarProdutosAdmin(): Promise<Produto[]> {

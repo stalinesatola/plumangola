@@ -1,18 +1,17 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Produto, formatarPreco, getProdutoStatus } from "@/lib/produtos";
+import { ProdutoPublico, formatarPreco } from "@/lib/produtos";
 
 export function ProductCard({
   produto,
   onSelecionar,
 }: {
-  produto: Produto;
-  onSelecionar: (produto: Produto) => void;
+  produto: ProdutoPublico;
+  onSelecionar: (produto: ProdutoPublico) => void;
 }) {
   const t = useTranslations("ProductCard");
-  const status = getProdutoStatus(produto);
-  const disponivel = status === "disponivel";
+  const disponivel = produto.disponivel;
 
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">

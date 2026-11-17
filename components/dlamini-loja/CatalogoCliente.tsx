@@ -2,14 +2,14 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Produto } from "@/lib/produtos";
+import { ProdutoPublico } from "@/lib/produtos";
 import { normalizarBusca } from "@/lib/slug";
 import { ProductCard } from "@/components/dlamini-loja/ProductCard";
 import { OrderForm } from "@/components/dlamini-loja/OrderForm";
 
-export function CatalogoCliente({ produtos }: { produtos: Produto[] }) {
+export function CatalogoCliente({ produtos }: { produtos: ProdutoPublico[] }) {
   const t = useTranslations("DlaminiLoja");
-  const [produtoSelecionado, setProdutoSelecionado] = useState<Produto | null>(
+  const [produtoSelecionado, setProdutoSelecionado] = useState<ProdutoPublico | null>(
     null
   );
   const [pesquisa, setPesquisa] = useState("");
@@ -48,7 +48,7 @@ export function CatalogoCliente({ produtos }: { produtos: Produto[] }) {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {produtosFiltrados.map((produto) => (
             <ProductCard
-              key={produto.id}
+              key={produto.slug}
               produto={produto}
               onSelecionar={setProdutoSelecionado}
             />
