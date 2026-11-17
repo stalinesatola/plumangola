@@ -21,7 +21,7 @@ export default async function SucessoPage({ params, searchParams }: Props) {
 
   // Confirmar no servidor junto do Stripe — não confiar só no redirect.
   let sessao: CheckoutSession | null = null;
-  if (typeof session_id === "string" && /^cs_test_[A-Za-z0-9]{10,200}$/.test(session_id)) {
+  if (typeof session_id === "string" && /^cs_(test|live)_[A-Za-z0-9]{10,200}$/.test(session_id)) {
     const r = await obterCheckoutSession(session_id);
     if (r.ok) sessao = r.dados;
   }

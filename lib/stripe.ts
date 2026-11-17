@@ -2,32 +2,50 @@
  * Cliente mínimo da API do Stripe (só o necessário para Checkout), com
  * `fetch` — evita adicionar o SDK ao bundle.
  *
- * SEGURANÇA: por decisão do dono, os pagamentos estão em MODO DE TESTE.
- * Este módulo recusa qualquer chave que não seja de teste (sk_test_ /
- * rk_test_). Para ativar pagamentos reais é preciso alterar este código
- * conscientemente, com aprovação do Plum.ton.
+ * SEGURANÇA: pagamentos reais (chaves sk_live_ / rk_live_) só são aceites
+ * em PRODUÇÃO (VERCEL_ENV === "production"), por aprovação do Plum.ton em
+ * 17/11/2026. Em Preview e desenvolvimento só se aceitam chaves de teste
+ * (sk_test_ / rk_test_) — uma chave live fora de produção é recusada.
  */
 
 const API = "https://api.stripe.com/v1";
 
 export type ResultadoStripe<T> = { ok: true; dados: T } | { ok: false; erro: string };
 
-function obterChaveTeste(): { ok: true; chave: string } | { ok: false; erro: string } {
+export function emProducao(): boolean {
+  return process.env.VERCEL_ENV === "production";
+}
+
+function obterChave():
+  | { ok: true; chave: string; live: boolean }
+  | { ok: false; erro: string } {
   const chave = process.env.STRIPE_SECRET_KEY;
   if (!chave) {
     return { ok: false, erro: "STRIPE_SECRET_KEY não está configurada." };
   }
-  if (!/^(sk|rk)_test_/.test(chave)) {
-    return {
-      ok: false,
-      erro: "STRIPE_SECRET_KEY não é uma chave de teste — pagamentos live estão desativados.",
-    };
+  if (/^(sk|rk)_test_/.test(chave)) {
+    return { ok: true, chave, live: false };
   }
-  return { ok: true, chave };
+  if (/^(sk|rk)_live_/.test(chave)) {
+    if (!emProducao()) {
+      return {
+        ok: false,
+        erro: "Chave live fora de produção — recusada (Preview/dev só aceitam chaves de teste).",
+      };
+    }
+    return { ok: true, chave, live: true };
+  }
+  return { ok: false, erro: "STRIPE_SECRET_KEY com formato desconhecido." };
 }
 
 export function stripeConfigurado(): boolean {
-  return obterChaveTeste().ok;
+  return obterChave().ok;
+}
+
+/** true se a chave em uso é live (só possível em produção). */
+export function stripeModoLive(): boolean {
+  const r = obterChave();
+  return r.ok && r.live;
 }
 
 async function pedido<T>(
@@ -35,7 +53,7 @@ async function pedido<T>(
   caminho: string,
   corpo?: URLSearchParams
 ): Promise<ResultadoStripe<T>> {
-  const chave = obterChaveTeste();
+  const chave = obterChave();
   if (!chave.ok) return chave;
 
   const resposta = await fetch(`${API}${caminho}`, {
