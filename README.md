@@ -292,12 +292,19 @@ Duas notas importantes, confirmadas ao testar em produção:
   "Fallback gratuito" acima. Repor para 12 assim que `ANTHROPIC_API_KEY`
   estiver a funcionar normalmente.
 
+## Espaço externo: BatFichas (`batfichas.com`)
+
+O hub também lista o [BatFichas](https://batfichas.com) (Batalhão das Fichas),
+que corre noutro projeto — a card na home abre o site externo. Não há pasta
+em `app/[locale]/` para este espaço.
+
 ## Adicionar um novo espaço
 
 Cada espaço vive na sua própria pasta dentro de `app/[locale]/`, por exemplo
 `app/[locale]/<novo-espaco>/`, com o seu próprio `layout.tsx` e `page.tsx`.
 Adiciona uma entrada na lista `espacos` em `app/[locale]/page.tsx` para que
-apareça na home de `plum-angola.com`. Se o espaço tiver texto fixo na
+apareça na home de `plum-angola.com`. Espaços externos (outro domínio) usam
+`href` absoluto com `externo: true`. Se o espaço tiver texto fixo na
 interface, adiciona as chaves de tradução correspondentes em
 `messages/pt.json` e `messages/en.json`.
 

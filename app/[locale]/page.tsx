@@ -5,28 +5,48 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 export default async function HomePage() {
   const t = await getTranslations("Hub");
 
-  const espacos = [
+  const espacos: {
+    key: string;
+    nome: string;
+    descricao: string;
+    href: string;
+    externo?: boolean;
+  }[] = [
     {
-      slug: "dlamini-loja",
+      key: "batfichas",
+      nome: t("batfichas.name"),
+      descricao: t("batfichas.description"),
+      href: "https://batfichas.com",
+      externo: true,
+    },
+    {
+      key: "dlamini-loja",
       nome: t("dlaminiLoja.name"),
       descricao: t("dlaminiLoja.description"),
+      href: "/dlamini-loja",
     },
     {
-      slug: "paulirabeauty",
+      key: "paulirabeauty",
       nome: t("paulirabeauty.name"),
       descricao: t("paulirabeauty.description"),
+      href: "/paulirabeauty",
     },
     {
-      slug: "empregos",
+      key: "empregos",
       nome: t("empregos.name"),
       descricao: t("empregos.description"),
+      href: "/empregos",
     },
     {
-      slug: "utente",
+      key: "utente",
       nome: t("utente.name"),
       descricao: t("utente.description"),
+      href: "/utente",
     },
   ];
+
+  const cardClassName =
+    "group flex flex-col gap-2 rounded-xl border border-gray-200 p-6 transition hover:border-plum-400 hover:shadow-md";
 
   return (
     <main className="mx-auto flex min-h-screen max-w-4xl flex-col gap-10 px-6 py-16">
@@ -42,18 +62,33 @@ export default async function HomePage() {
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2">
-        {espacos.map((espaco) => (
-          <Link
-            key={espaco.slug}
-            href={`/${espaco.slug}`}
-            className="group flex flex-col gap-2 rounded-xl border border-gray-200 p-6 transition hover:border-plum-400 hover:shadow-md"
-          >
-            <h2 className="text-lg font-semibold text-plum-700 group-hover:text-plum-600">
-              {espaco.nome}
-            </h2>
-            <p className="text-sm text-gray-600">{espaco.descricao}</p>
-          </Link>
-        ))}
+        {espacos.map((espaco) =>
+          espaco.externo ? (
+            <a
+              key={espaco.key}
+              href={espaco.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cardClassName}
+            >
+              <h2 className="text-lg font-semibold text-plum-700 group-hover:text-plum-600">
+                {espaco.nome}
+              </h2>
+              <p className="text-sm text-gray-600">{espaco.descricao}</p>
+            </a>
+          ) : (
+            <Link
+              key={espaco.key}
+              href={espaco.href}
+              className={cardClassName}
+            >
+              <h2 className="text-lg font-semibold text-plum-700 group-hover:text-plum-600">
+                {espaco.nome}
+              </h2>
+              <p className="text-sm text-gray-600">{espaco.descricao}</p>
+            </Link>
+          )
+        )}
       </section>
     </main>
   );

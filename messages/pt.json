@@ -3,6 +3,10 @@
     "eyebrow": "Plum Angola",
     "title": "Um só domínio, vários espaços.",
     "description": "plum-angola.com reúne diferentes espaços independentes — lojas de agentes revendedores, serviços e projetos — cada um com o seu próprio endereço abaixo deste domínio.",
+    "batfichas": {
+      "name": "BatFichas",
+      "description": "Batalhão das Fichas — fichas de apostas, planos e ferramentas em batfichas.com (+18, jogo responsável)."
+    },
     "dlaminiLoja": {
       "name": "Dlamini Loja",
       "description": "Espaço do agente revendedor Dlamini, com produtos de arthur-ford.com e pedidos enviados diretamente por Telegram."
