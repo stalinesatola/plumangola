@@ -292,11 +292,13 @@ Duas notas importantes, confirmadas ao testar em produção:
   "Fallback gratuito" acima. Repor para 12 assim que `ANTHROPIC_API_KEY`
   estiver a funcionar normalmente.
 
-## Espaço externo: BatFichas (`batfichas.com`)
+## Espaços externos
 
-O hub também lista o [BatFichas](https://batfichas.com) (Batalhão das Fichas),
-que corre noutro projeto — a card na home abre o site externo. Não há pasta
-em `app/[locale]/` para este espaço.
+O hub também lista projetos que correm noutro sítio — a card na home abre o
+site externo. Não há pasta em `app/[locale]/` para estes espaços:
+
+- [BatFichas](https://batfichas.com) (Batalhão das Fichas)
+- [Hymoshe](https://hymoshe.vercel.app/) (tecnologia feita em Angola)
 
 ## Adicionar um novo espaço
 

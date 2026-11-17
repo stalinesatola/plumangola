@@ -20,6 +20,13 @@ export default async function HomePage() {
       externo: true,
     },
     {
+      key: "hymoshe",
+      nome: t("hymoshe.name"),
+      descricao: t("hymoshe.description"),
+      href: "https://hymoshe.vercel.app/",
+      externo: true,
+    },
+    {
       key: "dlamini-loja",
       nome: t("dlaminiLoja.name"),
       descricao: t("dlaminiLoja.description"),
