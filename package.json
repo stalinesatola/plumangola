@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "scrape:dlamini-loja": "tsx scripts/scrape-arthur-ford.ts",
     "seed:admin": "tsx scripts/seed-admin.ts"
   },
