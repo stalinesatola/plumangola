@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { listarProdutosPublicos, localizarProduto } from "@/lib/produtos";
+import { listarProdutosPublicos } from "@/lib/produtos";
 import { CatalogoCliente } from "@/components/dlamini-loja/CatalogoCliente";
 
 export const revalidate = 0;
@@ -11,10 +11,7 @@ export default async function DlaminiLojaPage({
 }) {
   const { locale } = await params;
   const t = await getTranslations("DlaminiLoja");
-  const produtos = await listarProdutosPublicos();
-  const produtosLocalizados = produtos.map((produto) =>
-    localizarProduto(produto, locale)
-  );
+  const produtos = await listarProdutosPublicos(locale);
 
   return (
     <>
@@ -23,7 +20,7 @@ export default async function DlaminiLojaPage({
         <p className="text-gray-600">{t("intro")}</p>
       </div>
 
-      <CatalogoCliente produtos={produtosLocalizados} />
+      <CatalogoCliente produtos={produtos} />
     </>
   );
 }

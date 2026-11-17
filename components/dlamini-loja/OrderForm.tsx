@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { Produto, formatarPreco } from "@/lib/produtos";
+import { ProdutoPublico, formatarPreco } from "@/lib/produtos";
 
 type Estado = "idle" | "enviando" | "erro";
 
@@ -11,7 +11,7 @@ export function OrderForm({
   produto,
   onFechar,
 }: {
-  produto: Produto;
+  produto: ProdutoPublico;
   onFechar: () => void;
 }) {
   const t = useTranslations("OrderForm");
