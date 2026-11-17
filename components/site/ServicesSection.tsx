@@ -12,7 +12,7 @@ import {
   type Idioma,
 } from "@/lib/servicos/cambio";
 import { NOMES_PACOTE, SERVICOS, sinalKz, type Pacote } from "@/lib/servicos/catalogo";
-import { stripeConfigurado } from "@/lib/stripe";
+import { stripeConfigurado, stripeModoLive } from "@/lib/stripe";
 import { PayDepositButton } from "./PayDepositButton";
 
 async function Preco({ pacote, idioma }: { pacote: Pacote; idioma: Idioma }) {
@@ -74,6 +74,7 @@ export async function ServicesSection() {
   const t = await getTranslations("Site");
   const idioma = (await getLocale()) as Idioma;
   const pagamentosAtivos = stripeConfigurado();
+  const modoTeste = pagamentosAtivos && !stripeModoLive();
 
   return (
     <section id="servicos" aria-labelledby="servicos-titulo" className="scroll-mt-20">
@@ -88,7 +89,7 @@ export async function ServicesSection() {
             date: formatarData(DATA_CAMBIO, idioma),
             validUntil: formatarData(PRECARIO_VALIDO_ATE, idioma),
           })}
-          {pagamentosAtivos && <> {t("pay.testMode")}</>}
+          {modoTeste && <> {t("pay.testMode")}</>}
         </p>
         <nav aria-label={t("services.title")} className="flex flex-wrap gap-2 pt-2">
           {SERVICOS.map((s) => (

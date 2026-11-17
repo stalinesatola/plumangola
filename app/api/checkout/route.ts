@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getClienteIp, verificarLimiteComRecurso } from "@/lib/rate-limit";
 import { encontrarPacote, NOMES_PACOTE, sinalKz } from "@/lib/servicos/catalogo";
 import { DATA_CAMBIO, KZ_POR_USD, kzParaCentimosUsd } from "@/lib/servicos/cambio";
-import { criarCheckoutSession } from "@/lib/stripe";
+import { criarCheckoutSession, emProducao, stripeModoLive } from "@/lib/stripe";
+import { SITE_URL } from "@/lib/site";
 
 const LIMITE = 10;
 const JANELA_SEGUNDOS = 10 * 60;
@@ -55,7 +56,8 @@ export async function POST(request: NextRequest) {
 
   const centimos = kzParaCentimosUsd(sinal);
   const prefixo = locale === "en" ? "/en" : "";
-  const base = request.nextUrl.origin;
+  // Em produção, os URLs de retorno usam sempre o domínio canónico.
+  const base = emProducao() ? SITE_URL : request.nextUrl.origin;
   const nomePacote = `${servico.nome[locale]} — ${NOMES_PACOTE[pacote.id][locale]}${
     pacote.nome ? ` (${pacote.nome[locale]})` : ""
   }`;
@@ -99,7 +101,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (resultado.dados.livemode || !resultado.dados.url) {
+  // O modo da sessão tem de bater com o da chave (live só em produção).
+  if (resultado.dados.livemode !== stripeModoLive() || !resultado.dados.url) {
     return NextResponse.json({ ok: false, erro: "Sessão inválida." }, { status: 500 });
   }
 
