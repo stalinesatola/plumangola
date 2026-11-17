@@ -44,3 +44,46 @@ export async function verificarLimite(
 
   return true;
 }
+
+// Contador em memória, usado só como recurso quando a base de dados não
+// está disponível (ex: preview sem POSTGRES_URL). Não é partilhado entre
+// instâncias serverless, mas é melhor do que não limitar nada.
+const eventosMemoria = new Map<string, number[]>();
+
+function verificarLimiteMemoria(
+  chave: string,
+  limite: number,
+  janelaSegundos: number
+): boolean {
+  const agora = Date.now();
+  const recentes = (eventosMemoria.get(chave) ?? []).filter(
+    (t) => agora - t < janelaSegundos * 1000
+  );
+  if (recentes.length >= limite) {
+    eventosMemoria.set(chave, recentes);
+    return false;
+  }
+  recentes.push(agora);
+  eventosMemoria.set(chave, recentes);
+  if (eventosMemoria.size > 5000) {
+    eventosMemoria.clear();
+  }
+  return true;
+}
+
+/**
+ * Igual a `verificarLimite`, mas se a base de dados falhar usa um contador
+ * em memória em vez de rebentar o pedido.
+ */
+export async function verificarLimiteComRecurso(
+  chave: string,
+  limite: number,
+  janelaSegundos: number
+): Promise<boolean> {
+  try {
+    return await verificarLimite(chave, limite, janelaSegundos);
+  } catch (erro) {
+    console.error("Rate limit em Postgres indisponível, a usar memória:", erro);
+    return verificarLimiteMemoria(chave, limite, janelaSegundos);
+  }
+}

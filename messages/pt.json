@@ -182,5 +182,132 @@
         "descricao": "Validação de documentos fiscais emitidos através do portal."
       }
     }
+  },
+  "Site": {
+    "metaTitle": "Plum Angola — Websites, lojas online, chatbots IA e automação",
+    "metaDescription": "Serviços de TI e Inteligência Artificial em Angola e para o mundo: websites, lojas online, chatbots com IA, automação, sistemas à medida, suporte, consultoria e formação. Preços claros em Kz e USD.",
+    "nav": {
+      "services": "Serviços",
+      "portfolio": "Portfólio",
+      "how": "Como funciona",
+      "contact": "Contactos"
+    },
+    "hero": {
+      "eyebrow": "Serviços Informáticos e IA · Luanda, Angola",
+      "title": "Tecnologia que faz o seu negócio vender mais.",
+      "subtitle": "Websites, lojas online, chatbots com IA e automação para empresas em Angola e no estrangeiro. Preços claros, em Kwanzas e em dólares, e um contacto direto com quem faz o trabalho.",
+      "ctaServices": "Ver serviços e preços",
+      "ctaWhatsapp": "Falar no WhatsApp"
+    },
+    "offer": {
+      "title": "Oferta de lançamento",
+      "text": "20% de desconto no valor de implementação para os primeiros 10 clientes ou até 31/03/2027, e 1.º mês grátis nas mensalidades. Desconto não acumulável; não se aplica a custos de terceiros. A elegibilidade é confirmada na proposta."
+    },
+    "services": {
+      "title": "Serviços e pacotes",
+      "subtitle": "Três pacotes por serviço — Básico, Profissional e Premium. Valores sem IVA, segundo o Preçário 2026/2027.",
+      "rateNote": "Valores em USD aproximados, à taxa de referência do BNA: 1 USD = {rate} Kz ({date}). O preço contratual é o valor em Kz. Preçário válido até {validUntil}.",
+      "oneOff": "pagamento único",
+      "perMonth": "/mês",
+      "plusMonthly": "+ {amount} /mês",
+      "perHour": "/hora",
+      "from": "desde",
+      "onRequest": "Sob orçamento",
+      "deposit": "Sinal de 50%: {kz} (≈ {usd})",
+      "payDeposit": "Pagar sinal de 50%",
+      "requestQuote": "Pedir orçamento",
+      "noOnlineDeposit": "Contratado mediante proposta",
+      "notes": "Condições"
+    },
+    "pay": {
+      "redirecting": "A abrir pagamento seguro…",
+      "error": "Não foi possível iniciar o pagamento. Tente de novo ou contacte-nos.",
+      "testMode": "Pagamentos em modo de teste — nenhum valor real é cobrado."
+    },
+    "how": {
+      "title": "Como funciona",
+      "steps": [
+        "Escolha um pacote ou peça um orçamento — respondemos em até 24h úteis.",
+        "Confirmamos o âmbito numa proposta (válida 30 dias).",
+        "Paga o sinal: 50% na adjudicação (projectos até 500.000 Kz) — online com cartão ou por transferência/Multicaixa Express.",
+        "Desenvolvemos, entregamos e paga o restante na entrega. Depois do pagamento integral, a solução e os dados são seus."
+      ],
+      "terms": "Projectos acima de 500.000 Kz: 40% na adjudicação, 30% na aprovação do protótipo e 30% na entrega. Mensalidades pagas antecipadamente, sem fidelização. Eventuais descontos são acertados no pagamento final."
+    },
+    "portfolio": {
+      "title": "Portfólio e demonstrações",
+      "subtitle": "Projetos reais, construídos e mantidos por nós — abra e experimente.",
+      "open": "Abrir",
+      "items": {
+        "dlaminiLoja": {
+          "tag": "Loja online",
+          "description": "Montra de revenda com catálogo gerido num painel de administração e pedidos enviados por Telegram."
+        },
+        "paulirabeauty": {
+          "tag": "Agendamentos",
+          "description": "Site de estética com marcação de horários online e confirmação por Telegram/WhatsApp."
+        },
+        "empregos": {
+          "tag": "IA",
+          "description": "Carregue o CV e veja vagas em Angola avaliadas por IA quanto à compatibilidade."
+        },
+        "utente": {
+          "tag": "Guia digital",
+          "description": "Guia dos serviços do Portal do Contribuinte, com acesso direto ao site oficial do Minfin."
+        },
+        "batfichas": {
+          "tag": "Plataforma web",
+          "description": "Batalhão das Fichas — plataforma com planos, bot de Telegram e ferramentas (+18, jogo responsável)."
+        }
+      },
+      "otherSpaces": "Outros espaços em plum-angola.com:"
+    },
+    "contact": {
+      "title": "Peça um orçamento",
+      "subtitle": "Diga-nos o que precisa. Respondemos por e-mail ou WhatsApp em até 24h úteis (dias úteis, 08h–17h, hora de Luanda).",
+      "whatsapp": "WhatsApp",
+      "email": "E-mail",
+      "address": "Bairro Viana, Luanda, Angola",
+      "whatsappMessage": "Olá! Vi o site plum-angola.com e gostaria de pedir um orçamento."
+    },
+    "form": {
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefone / WhatsApp (opcional)",
+      "company": "Empresa (opcional)",
+      "country": "País (opcional)",
+      "service": "Serviço",
+      "package": "Pacote (opcional)",
+      "anyPackage": "Ainda não sei",
+      "other": "Outro / não sei",
+      "message": "Descreva o projeto",
+      "messagePlaceholder": "Ex.: preciso de uma loja online para 50 produtos, com pagamento por Multicaixa Express…",
+      "submit": "Enviar pedido",
+      "sending": "A enviar…",
+      "success": "Pedido enviado! Entraremos em contacto em breve.",
+      "errorValidation": "Verifique os campos assinalados.",
+      "errorLimit": "Demasiados pedidos seguidos. Aguarde uns minutos.",
+      "errorSend": "Não foi possível enviar agora. Envie-nos o pedido por WhatsApp ou e-mail:",
+      "privacy": "Usamos os seus dados apenas para responder a este pedido."
+    },
+    "footer": {
+      "company": "Staline Marques Satola — Serviços Informáticos e IA",
+      "nif": "NIF 000232783HO035",
+      "rights": "Preços sem IVA. Todos os direitos reservados."
+    },
+    "success": {
+      "title": "Pagamento recebido — obrigado!",
+      "text": "O sinal foi registado. Vamos contactá-lo em até 24h úteis para a reunião de arranque.",
+      "pending": "Ainda não confirmámos o pagamento. Se foi cobrado, contacte-nos com a referência abaixo.",
+      "reference": "Referência",
+      "amount": "Valor",
+      "package": "Pacote",
+      "back": "Voltar ao início"
+    },
+    "cancel": {
+      "title": "Pagamento cancelado",
+      "text": "Nenhum valor foi cobrado. Pode tentar de novo ou falar connosco para tirar dúvidas.",
+      "back": "Ver serviços"
+    }
   }
 }

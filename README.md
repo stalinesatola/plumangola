@@ -42,6 +42,28 @@ admin, ao criar/editar um produto, os campos "Nome (EN)" e "Descrição (EN)"
 são opcionais — se ficarem em branco, a loja em inglês mostra a versão em
 português desse produto.
 
+## Página principal: serviços (`/`)
+
+A página inicial é a montra dos serviços da Staline Marques Satola —
+Serviços Informáticos e IA (websites, lojas online, chatbots IA, automação,
+sistemas à medida, suporte, manutenção, consultoria e formação), em PT e EN.
+
+- **Preços**: `lib/servicos/catalogo.ts`, transcritos do Preçário 2026/2027.
+  É a única fonte de preços — não inventar valores. O câmbio (1 USD = 913 Kz,
+  BNA 16/11/2026) está em `lib/servicos/cambio.ts`.
+- **Sinal de 50% (Stripe Checkout, modo de TESTE)**: `POST /api/checkout`
+  recebe só `servico` + `pacote`; o valor é calculado no servidor (50% do
+  preço em Kz, convertido para USD). Só pacotes com preço fixo até
+  500.000 Kz têm sinal online (regra do preçário); sistemas à medida,
+  mensalidades, preços à hora e "sob orçamento" pedem proposta.
+  `lib/stripe.ts` recusa chaves que não sejam `sk_test_`/`rk_test_`.
+  Páginas de retorno: `/pagamento/sucesso` e `/pagamento/cancelado`.
+- **Pedido de orçamento**: `POST /api/orcamento` (validação, honeypot,
+  rate limit 5/10 min por IP, escape de HTML) → Telegram
+  (`TELEGRAM_BOT_TOKEN_ORCAMENTOS` / `TELEGRAM_CHAT_ID_ORCAMENTOS`).
+- **SEO**: metadata + Open Graph + hreflang por idioma, `app/sitemap.ts`,
+  `app/robots.ts` (previews ficam `noindex`) e JSON-LD `Organization`.
+
 ## Espaço: Dlamini Loja (`/dlamini-loja`)
 
 Montra de revenda dos produtos de [arthur-ford.com](https://arthur-ford.com/),
